@@ -1,54 +1,96 @@
-# React + TypeScript + Vite
+src/ – корневая директория проекта
+├── app/
+├── entities/
+├── features/
+├── pages/
+├── processes/
+├── shared/
+└── widgets/
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+1. app/ – инициализация приложения (точка входа, провайдеры)
+   ├── index.tsx # Главная точка входа
+   ├── App.tsx # Корневой компонент приложения
+   └── providers/ # Провайдеры: store, router и т.п.
+   ├── RouterProvider.tsx
+   ├── StoreProvider.tsx
+   └── index.ts # Barrel-файл
+   Здесь инициализируются обертки Redux, Router и другие глобальные контексты.
 
-Currently, two official plugins are available:
+2. entities/ – бизнес-сущности: Order, Product, Session
+   ├── order/
+   │ ├── model/ # Redux slice, types, selectors
+   │ ├── ui/ # UI-компоненты на уровне Order (например, OrderCard)
+   │ └── index.ts # Barrel-файл
+   ├── product/
+   │ ├── model/
+   │ ├── ui/
+   │ └── index.ts
+   └── session/
+   ├── model/ # Счетчик сессий через WebSocket
+   └── index.ts
+   Тут описаны Redux-слайсы, типы, утилиты и базовые UI-компоненты сущностей.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+3. features/ – изолированные фичи (небольшие законченные куски функционала)
+   ├── filter-products/
+   │ ├── model/ # Локальное состояние, slice, hook
+   │ ├── ui/ # Компонент фильтра (например, <ProductFilter />)
+   │ └── index.ts
+   ├── delete-order/
+   │ ├── model/ # Логика удаления
+   │ ├── ui/ # Кнопка удаления и попап
+   │ └── index.ts
+   └── toggle-order-info/
+   ├── model/
+   ├── ui/
+   └── index.ts
+   Фичи всегда завязаны на конкретную бизнес-функцию (удаление, фильтрация и т.п.).
 
-## Expanding the ESLint configuration
+4. widgets/ – крупные секции интерфейса, состоящие из нескольких сущностей/фичей
+   ├── ordersList/
+   │ ├── model/
+   │ ├── ui/ # <OrdersList /> – отображает список заказов
+   │ └── index.ts
+   ├── productsList/
+   │ ├── ui/ # <ProductsList /> – список продуктов
+   │ └── index.ts
+   └── orderDetails/
+   ├── ui/ # Детали заказа (открываются при выборе)
+   └── index.ts
+   Это уже более сложные UI-единицы, которые собираются из entities и features.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+5. pages/ – страницы для маршрутов
+   ├── ordersPage/
+   │ ├── ui.tsx
+   │ └── index.ts
+   ├── productsPage/
+   │ ├── ui.tsx
+   │ └── index.ts
+   └── index.ts # Собираем все страницы для роутера
+   Каждая страница подключается к роутеру и содержит конкретный layout, header, widget'ы.
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
-```
+6. processes/ – общие участки приложения (TopMenu, навигация и т.д.)
+   ├── topMenu/
+   │ ├── ui/ # Текущее время и счетчик сессий
+   │ └── index.ts
+   ├── navigationMenu/
+   │ ├── ui/ # Ссылки на Orders и Products
+   │ └── index.ts
+   └── index.ts
+   Это компоненты, которые часто повторяются на нескольких страницах.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-});
-```
+7. shared/ – переиспользуемые ресурсы
+   ├── ui/ # Общие UI-компоненты: Button, Select, Modal
+   │ ├── button/
+   │ ├── select/
+   │ └── index.ts
+   ├── lib/ # Хелперы, утилиты, hooks
+   │ ├── formatDate.ts
+   │ ├── useDebounce.ts
+   │ └── index.ts
+   ├── config/ # Константы, конфигурации
+   │ ├── routes.ts
+   │ └── currencies.ts
+   ├── types/ # Общие типы
+   │ └── index.ts
+   └── assets/ # Шрифты, изображения и прочее
+   Всё, что переиспользуется в любом месте проекта, кладется сюда.
