@@ -1,9 +1,10 @@
+import { RouterProvider } from './providers';
 import './App.css';
 
 export const App = () => {
   return (
-    <>
-      <h1>Hello World</h1>
-    </>
+    <RouterProvider>
+      <h1>Hello Router</h1>
+    </RouterProvider>
   );
 };
