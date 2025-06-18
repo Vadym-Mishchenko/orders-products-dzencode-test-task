@@ -44,6 +44,7 @@ export const TopMenu = () => {
           <Col xs={4}>
             <Form.Control
               type="text"
+              name="search"
               placeholder="Поиск"
               className="bg-light"
               style={{
