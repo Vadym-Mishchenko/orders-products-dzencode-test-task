@@ -1,1 +1,1 @@
-export * from './pagetransition';
+export * from './Pagetransition';
