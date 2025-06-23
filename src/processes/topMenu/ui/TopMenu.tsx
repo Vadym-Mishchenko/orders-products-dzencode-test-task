@@ -37,7 +37,7 @@ export const TopMenu = () => {
           <Col xs="auto" className="d-flex align-items-center me-4 gap-2">
             <Link to="/" className="d-flex align-items-center text-decoration-none">
               <FaUserShield color="green" size={32} />
-              <span className="fw-semibold fs-6 text-success ms-2">INVENTORY</span>
+              <span className="fw-semibold fs-6 text-success ms-2 user-select-none">INVENTORY</span>
             </Link>
           </Col>
 
@@ -46,6 +46,8 @@ export const TopMenu = () => {
               type="text"
               name="search"
               placeholder="Поиск"
+              aria-label="Search"
+              autoComplete="off"
               className="bg-light"
               style={{
                 borderColor: '#ccc',
@@ -61,10 +63,7 @@ export const TopMenu = () => {
             <time>{formatDate(currentTime)}</time>
             <FiClock color="green" size={18} />
             <time>{formatTime(currentTime)}</time>
-            <span
-              className="ms-4 text-success d-flex align-items-center gap-1"
-              title="Активные сессии"
-            >
+            <span className="ms-4 text-success d-flex align-items-center gap-1 user-select-none">
               <FaUsers />
               <strong>{sessionsCount}</strong>
             </span>

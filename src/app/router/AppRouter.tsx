@@ -1,10 +1,12 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { MainLayout } from '@/shared';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { MainLayout, PageTransition } from '@/shared';
 import { appRoutes } from './config';
 
 export const AppRouter = () => {
+  const location = useLocation();
+
   return (
-    <Routes>
+    <Routes location={location} key={location.pathname}>
       <Route
         path="/"
         element={
@@ -15,7 +17,15 @@ export const AppRouter = () => {
       />
 
       {appRoutes.map(({ path, element }) => (
-        <Route key={path} path={path} element={<MainLayout>{element}</MainLayout>} />
+        <Route
+          key={path}
+          path={path}
+          element={
+            <MainLayout>
+              <PageTransition>{element}</PageTransition>
+            </MainLayout>
+          }
+        />
       ))}
     </Routes>
   );
