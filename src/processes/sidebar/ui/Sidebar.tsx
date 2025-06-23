@@ -5,7 +5,7 @@ import './Sidebar.css';
 
 export const Sidebar = () => {
   return (
-    <aside className="sidebar bg-light d-flex flex-column py-4 shadow-sm overflow-hidden">
+    <aside className="sidebar bg-light d-flex flex-column py-4 shadow-lg overflow-hidden">
       <div className="sidebar__avatar mb-4 text-center position-relative d-inline-block">
         <FaUserCircle className="sidebar__avatar-icon" />
         <NavLink to="/user">
