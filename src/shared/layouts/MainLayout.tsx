@@ -10,9 +10,9 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
     <div className="d-flex flex-column min-vh-100">
       <div
         style={{
+          zIndex: 1000,
           position: 'sticky',
           top: 0,
-          zIndex: 1000,
           background: '#fff',
           boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
         }}
@@ -20,9 +20,11 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
         <TopMenu />
       </div>
 
-      <div className="d-flex flex-grow-1">
+      <div className="d-flex flex-grow-1 w-100 overflow-hidden">
         <Sidebar />
-        <main className="flex-grow-1">{children}</main>
+        <main className="flex-grow-1" style={{ width: 'calc(100vw - 220px)' }}>
+          {children}
+        </main>
       </div>
     </div>
   );

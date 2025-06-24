@@ -1,0 +1,13 @@
+.order-card__delete {
+  flex-shrink: 0;
+  min-width: max-content;
+  background: none;
+  border: none;
+  color: #999797;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.order-card__delete:hover {
+  color: #994141;
+}
