@@ -1,0 +1,15 @@
+.amount {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  min-width: max-content;
+}
+
+.amount--primary {
+  font-size: 0.9rem;
+}
+
+.amount--secondary {
+  font-size: 0.7rem;
+  color: #6c757d;
+}

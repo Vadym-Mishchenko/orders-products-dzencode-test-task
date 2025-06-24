@@ -1,0 +1,5 @@
+.card__date {
+  flex-shrink: 0;
+  min-width: max-content;
+  font-size: 0.9rem;
+}

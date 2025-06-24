@@ -1,13 +1,11 @@
-import { FaBoxOpen } from 'react-icons/fa';
+import { OrderCard } from '@/processes';
 
 export const OrdersPage = () => {
   return (
-    <div className="d-flex justify-content-center align-items-center h-100">
-      <div className="text-center">
-        <FaBoxOpen size={128} className="mb-3 text-secondary" />
-        <h2>Страница приходов</h2>
-        <p>Здесь отображаются данные о приходах</p>
-      </div>
+    <div className="d-flex flex-column gap-2 p-5 h-100">
+      {[1, 2, 3, 4].map((_, index) => (
+        <OrderCard key={index} />
+      ))}
     </div>
   );
 };
