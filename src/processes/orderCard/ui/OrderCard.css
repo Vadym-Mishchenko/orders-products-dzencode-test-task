@@ -1,10 +1,9 @@
 .order-card {
   display: flex;
   align-items: center;
-  gap: 1rem;
   padding: 0 24px;
   width: 100%;
-  min-width: 600px;
+  min-width: 820px;
   height: 70px;
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -20,7 +19,8 @@
 .order-card__meta {
   display: flex;
   flex: 1;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   gap: 1rem;
+  width: 50%;
 }
