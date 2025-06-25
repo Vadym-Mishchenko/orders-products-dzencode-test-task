@@ -1,19 +1,23 @@
 import { CardAmount, CardDate, CardDelete, CardProductCount, CardTitle } from '@/shared';
 import './OrderCard.css';
+import type { Order } from '@/entities';
 
-export const OrderCard = () => {
+interface IProps {
+  order: Order;
+}
+
+export const OrderCard = ({ order }: IProps) => {
+  console.log('OrderCard', order);
   return (
     <div className="order-card">
-      <CardTitle title="Длинное предлинное длинючее название прихода" />
+      <CardTitle title={order.title} />
       <div className="order-card__meta">
-        <CardProductCount productCount={23} onProductCounClick={() => console.log('Modal')} />
-        <CardDate date={new Date('2025-04-6 12:09:33')} />
-        <CardAmount
-          price={[
-            { value: 100.12, symbol: 'USD', isDefault: 0 },
-            { value: 2600.13, symbol: 'UAH', isDefault: 1 },
-          ]}
+        <CardProductCount
+          productCount={order.products.length}
+          onProductCounClick={() => console.log('Modal')}
         />
+        <CardDate date={new Date(order.date)} />
+        <CardAmount products={order.products} />
         <CardDelete onDelete={() => console.log('delete')} />
       </div>
     </div>
