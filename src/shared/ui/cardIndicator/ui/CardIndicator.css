@@ -1,0 +1,12 @@
+.card-indicator {
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.card-indicator--green {
+  background-color: #8dc63f;
+}
+
+.card-indicator--gray {
+  background-color: #444;
+}

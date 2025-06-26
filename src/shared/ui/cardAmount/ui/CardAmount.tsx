@@ -12,9 +12,10 @@ interface Product {
 
 interface IProrps {
   products: Product[];
+  width: string;
 }
 
-export const CardAmount = ({ products }: IProrps) => {
+export const CardAmount = ({ products, width }: IProrps) => {
   const totals: Record<string, number> = {};
 
   products.forEach((product) => {
@@ -27,7 +28,7 @@ export const CardAmount = ({ products }: IProrps) => {
   });
 
   return (
-    <div className="amount">
+    <div className="amount" style={{ width }}>
       {Object.entries(totals).map(([symbol, value]) => (
         <div key={symbol} className={symbol === 'UAH' ? 'amount--primary' : 'amount--secondary'}>
           {value.toFixed(2)} {symbol}

@@ -1,5 +1,4 @@
 .card__date {
-  width: 20%;
-  min-width: max-content;
+  min-width: 120px;
   font-size: 0.9rem;
 }

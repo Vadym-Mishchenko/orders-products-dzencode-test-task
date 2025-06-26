@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { store } from '../store/store';
-import { setOrders, setProducts } from '@/entities';
+import { setOrders } from '@/entities';
+import { setProducts } from '@/features';
 import { orders, products } from '@/shared';
 
 interface Props {
