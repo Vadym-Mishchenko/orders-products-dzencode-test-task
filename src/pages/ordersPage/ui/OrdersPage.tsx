@@ -1,14 +1,24 @@
+import { motion } from 'framer-motion';
 import { OrderCard } from '@/processes';
 import { useAppSelector } from '@/shared';
+import { containerVariants, cardVariants } from './animations';
 
 export const OrdersPage = () => {
   const { orders } = useAppSelector((state) => state.order);
 
   return (
-    <div className="d-flex flex-column gap-2 p-5 h-100">
+    <motion.div
+      className="d-flex flex-column gap-2 p-5 h-100"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      key="orders-list"
+    >
       {orders.map((order) => (
-        <OrderCard key={order.id} order={order} />
+        <motion.div key={order.id} variants={cardVariants}>
+          <OrderCard order={order} />
+        </motion.div>
       ))}
-    </div>
+    </motion.div>
   );
 };

@@ -41,7 +41,7 @@ export const TopMenu = () => {
             </Link>
           </Col>
 
-          <Col xs={4}>
+          {/* <Col xs={4}>
             <Form.Control
               type="text"
               name="search"
@@ -54,7 +54,7 @@ export const TopMenu = () => {
                 maxWidth: 400,
               }}
             />
-          </Col>
+          </Col> */}
 
           <Col
             className="text-end d-flex justify-content-end align-items-center"

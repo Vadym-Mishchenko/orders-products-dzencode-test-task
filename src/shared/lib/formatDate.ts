@@ -12,7 +12,6 @@ export const formatDate = (dateInput: string | Date, format: FormatType = 'numer
     return `${day} / ${capitalizedMonth} / ${year}`;
   }
 
-  // default: numeric
   const month = String(date.getMonth() + 1).padStart(2, '0');
   return `${day} / ${month} / ${year}`;
 };
