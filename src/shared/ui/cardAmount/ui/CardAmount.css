@@ -1,8 +1,7 @@
 .amount {
   display: flex;
   flex-direction: column;
-  width: 25%;
-  min-width: max-content;
+  min-width: 120px;
 }
 
 .amount--primary {

@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { Product } from './types';
+import type { Product } from '@/features';
 
 interface ProductState {
   products: Product[];
@@ -15,6 +15,9 @@ const productSlice = createSlice({
   reducers: {
     setProducts(state, action: PayloadAction<Product[]>) {
       state.products = action.payload;
+    },
+    deleteProduct(state, action: PayloadAction<number>) {
+      state.products = state.products.filter((p) => p.id !== action.payload);
     },
   },
 });

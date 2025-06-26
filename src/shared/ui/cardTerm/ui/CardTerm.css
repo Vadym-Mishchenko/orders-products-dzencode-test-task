@@ -1,0 +1,9 @@
+.card-term {
+  font-size: 0.9rem;
+  min-width: 112px;
+}
+
+.card-term__label {
+  color: #888888;
+  margin-right: 4px;
+}

@@ -1,0 +1,25 @@
+.card-title-serial {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.card-title-serial__title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-decoration: underline;
+  text-decoration-color: #cecdcd;
+  text-overflow: ellipsis;
+}
+
+.card-title-serial__serial {
+  font-size: 0.8rem;
+  color: #888;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -1,4 +1,5 @@
-import type { Order, Product } from '@/entities';
+import type { Order } from '@/entities';
+import type { Product } from '@/features';
 
 export const products: Product[] = [
   {
@@ -119,7 +120,7 @@ export const products: Product[] = [
     id: 7,
     serialNumber: 1007,
     isNew: 0,
-    photo: 'samsung_t7_ssd.jpg',
+    photo: 'laptop.jpg',
     title: 'Samsung T7 SSD',
     type: 'Laptops',
     specification: 'High resolution',
@@ -138,7 +139,7 @@ export const products: Product[] = [
     id: 8,
     serialNumber: 1008,
     isNew: 0,
-    photo: 'xiaomi_mi_router.jpg',
+    photo: 'router.jpg',
     title: 'Xiaomi Mi Router',
     type: 'Accessories',
     specification: 'High resolution',
@@ -157,7 +158,7 @@ export const products: Product[] = [
     id: 9,
     serialNumber: 1009,
     isNew: 1,
-    photo: 'logitech_mx_keys.jpg',
+    photo: 'keyboard.jpg',
     title: 'Logitech MX Keys',
     type: 'Accessories',
     specification: 'Ergonomic',

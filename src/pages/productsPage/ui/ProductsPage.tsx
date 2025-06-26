@@ -1,12 +1,26 @@
-import { FaCubes } from 'react-icons/fa';
+import { ProductCard, type Product } from '@/features';
+import { useAppSelector } from '@/shared';
+import './ProductsPage.css';
 
 export const ProductsPage = () => {
+  const { products } = useAppSelector((state) => state.product);
+
+  const handleDelete = (product: Product) => {
+    console.log('Удалить продукт:', product.title);
+  };
+
   return (
-    <div className="d-flex justify-content-center align-items-center h-100">
-      <div className="text-center">
-        <FaCubes size={128} className="mb-3 text-secondary" />
-        <h2>Страница продуктов</h2>
-        <p>Здесь отображается список всех продуктов</p>
+    <div className="products-page">
+      <div className="products-scroll-wrapper">
+        <div className="products-scroll-container">
+          {products.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              onDelete={() => handleDelete(product)}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

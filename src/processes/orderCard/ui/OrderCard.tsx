@@ -7,18 +7,18 @@ interface IProps {
 }
 
 export const OrderCard = ({ order }: IProps) => {
-  console.log('OrderCard', order);
   return (
     <div className="order-card">
-      <CardTitle title={order.title} />
+      <CardTitle title={order.title} width="50%" />
       <div className="order-card__meta">
         <CardProductCount
           productCount={order.products.length}
           onProductCounClick={() => console.log('Modal')}
+          width="20%"
         />
-        <CardDate date={new Date(order.date)} />
-        <CardAmount products={order.products} />
-        <CardDelete onDelete={() => console.log('delete')} />
+        <CardDate date={new Date(order.date)} width="20%" />
+        <CardAmount products={order.products} width="25%" />
+        <CardDelete onDelete={() => console.log('delete')} width="5%" />
       </div>
     </div>
   );
