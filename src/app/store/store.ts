@@ -1,11 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { orderReducer } from '@/entities';
+import { deleteModalReducer, orderReducer } from '@/entities';
 import { productReducer } from '@/features';
 
 export const store = configureStore({
   reducer: {
     order: orderReducer,
     product: productReducer,
+    deleteModal: deleteModalReducer,
   },
 });
 
