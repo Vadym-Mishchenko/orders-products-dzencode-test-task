@@ -11,6 +11,8 @@ export const OrdersPage = () => {
   const { orders } = useAppSelector((state) => state.order);
 
   const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [activeCollapsedOrderId, setActiveCollapsedOrderId] = useState<number | null>(null);
 
   const handleDelete = (id: number) => {
     setSelectedOrderId(id);
@@ -27,20 +29,14 @@ export const OrdersPage = () => {
     setSelectedOrderId(null);
   };
 
+  const toggleCollapse = (id: number) => {
+    setIsCollapsed((prev) => !prev);
+    setActiveCollapsedOrderId(id);
+  };
+
   if (orders.length === 0) {
     return (
-      <div
-        className="p-5 text-center text-muted"
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100%',
-          width: '100%',
-          boxSizing: 'border-box',
-        }}
-      >
+      <div className="p-5 text-center text-muted d-flex flex-column justify-content-center align-items-center h-100 w-100">
         <FaBoxOpen size={128} className="mb-3 text-secondary" />
         <h2>Сейчас приходов нет</h2>
       </div>
@@ -63,7 +59,13 @@ export const OrdersPage = () => {
             }}
             layout
           >
-            <OrderCard order={order} onDelete={() => handleDelete(order.id)} />
+            <OrderCard
+              order={order}
+              onDelete={() => handleDelete(order.id)}
+              isCollapsed={isCollapsed}
+              onToggleCollapse={() => toggleCollapse(order.id)}
+              showExpandIcon={order.id === activeCollapsedOrderId && isCollapsed}
+            />
           </motion.div>
         ))}
       </AnimatePresence>
