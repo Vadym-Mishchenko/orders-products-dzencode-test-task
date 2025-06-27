@@ -1,4 +1,5 @@
 .order-card {
+  position: relative;
   display: flex;
   align-items: center;
   padding: 0 24px;
@@ -9,6 +10,12 @@
   border-radius: 8px;
   overflow: hidden;
   transition: all 0.2s ease-in-out;
+}
+
+.order-card.collapsed {
+  width: 320px;
+  min-width: 320px;
+  justify-content: flex-start;
 }
 
 .order-card:hover {
@@ -23,4 +30,26 @@
   align-items: center;
   gap: 1rem;
   width: 50%;
+}
+
+.expand-icon {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  background-color: #d1d4d6;
+  width: 36px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
+}
+
+.expand-icon svg {
+  color: white;
+  width: 16px;
+  height: 16px;
 }

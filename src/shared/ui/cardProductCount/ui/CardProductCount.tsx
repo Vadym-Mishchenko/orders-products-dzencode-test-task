@@ -16,8 +16,8 @@ export const CardProductCount = ({ productCount, onProductCounClick, width }: IP
   const label = declOfNum(productCount, ['Продукт', 'Продукта', 'Продуктов']);
   return (
     <div className="card__info" style={{ width }}>
-      <div className="icon-circle">
-        <FaListUl onClick={onProductCounClick} />
+      <div className="icon-circle" onClick={onProductCounClick}>
+        <FaListUl />
       </div>
       <div className="product-count">
         <div className="count">{productCount}</div>
