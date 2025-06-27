@@ -1,0 +1,135 @@
+.modaldelete {
+  z-index: 1000;
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.modaldelete__content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 600px;
+  max-height: 90vh;
+  overflow: visible;
+  user-select: none;
+}
+
+.modaldelete__content-inner {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+.modaldelete__header {
+  margin-left: 12px;
+  padding: 20px;
+  background: white;
+  font-weight: 600;
+}
+
+.modaldelete__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  padding: 16px 28px;
+  background: #8dc63f;
+}
+
+.button {
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  user-select: none;
+  font-size: 12px;
+  transition: transform 0.3s ease;
+}
+
+.button--cancel {
+  color: white;
+  background: transparent;
+}
+.button--cancel:hover,
+.button--cancel:focus {
+  transform: scale(1.05);
+  background: transparent;
+  color: white;
+  box-shadow: none;
+  outline: none;
+}
+
+.button--confirm {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 24px;
+  min-width: 120px;
+  background: rgba(255, 255, 255, 0.8);
+  color: #dd3737;
+  font-weight: 700;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+.button--confirm:hover,
+.button--confirm:focus {
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.8);
+  color: #dd3737;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  outline: none;
+}
+
+.modaldelete__close {
+  z-index: 1100;
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  transform: translate(50%, -50%);
+  background: #f0f1ed;
+  border-radius: 50%;
+  border: none;
+  color: rgba(173, 173, 173, 0.685);
+  font-size: 24px;
+  cursor: pointer;
+  line-height: 1;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  user-select: none;
+}
+.modaldelete__close::before {
+  content: '×';
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  transform: translate(-50%);
+  font-size: 24px;
+  color: rgba(173, 173, 173, 0.685);
+  pointer-events: none;
+}
+.modaldelete__close:hover::before,
+.modaldelete__close:focus::before {
+  color: #8dc63f;
+}
+
+.modaldelete__product-info {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  margin-left: 12px;
+  padding: 16px 20px;
+  background: white;
+  border-bottom: 1px solid #ddd;
+}

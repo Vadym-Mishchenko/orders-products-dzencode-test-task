@@ -4,9 +4,10 @@ import type { Order } from '@/entities';
 
 interface IProps {
   order: Order;
+  onDelete: () => void;
 }
 
-export const OrderCard = ({ order }: IProps) => {
+export const OrderCard = ({ order, onDelete }: IProps) => {
   return (
     <div className="order-card">
       <CardTitle title={order.title} width="50%" />
@@ -18,7 +19,7 @@ export const OrderCard = ({ order }: IProps) => {
         />
         <CardDate date={new Date(order.date)} width="20%" />
         <CardAmount products={order.products} width="25%" />
-        <CardDelete onDelete={() => console.log('delete')} width="5%" />
+        <CardDelete onDelete={onDelete} width="5%" />
       </div>
     </div>
   );

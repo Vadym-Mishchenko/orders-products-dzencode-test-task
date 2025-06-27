@@ -1,24 +1,79 @@
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { OrderCard } from '@/processes';
-import { useAppSelector } from '@/shared';
-import { containerVariants, cardVariants } from './animations';
+import { deleteOrder } from '@/entities';
+import { useAppSelector, useAppDispatch } from '@/shared';
+import { ModalDelete } from '@/entities';
+import { FaBoxOpen } from 'react-icons/fa';
 
 export const OrdersPage = () => {
+  const dispatch = useAppDispatch();
   const { orders } = useAppSelector((state) => state.order);
 
+  const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
+
+  const handleDelete = (id: number) => {
+    setSelectedOrderId(id);
+  };
+
+  const handleConfirmDelete = () => {
+    if (selectedOrderId !== null) {
+      dispatch(deleteOrder(selectedOrderId));
+      setSelectedOrderId(null);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setSelectedOrderId(null);
+  };
+
+  if (orders.length === 0) {
+    return (
+      <div
+        className="p-5 text-center text-muted"
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%',
+          width: '100%',
+          boxSizing: 'border-box',
+        }}
+      >
+        <FaBoxOpen size={128} className="mb-3 text-secondary" />
+        <h2>Сейчас приходов нет</h2>
+      </div>
+    );
+  }
+
   return (
-    <motion.div
-      className="d-flex flex-column gap-2 p-5 h-100"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      key="orders-list"
-    >
-      {orders.map((order) => (
-        <motion.div key={order.id} variants={cardVariants}>
-          <OrderCard order={order} />
-        </motion.div>
-      ))}
-    </motion.div>
+    <div className="d-flex flex-column gap-2 p-5 h-100">
+      <AnimatePresence>
+        {orders.map((order, index) => (
+          <motion.div
+            key={order.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{
+              duration: 0.4,
+              ease: 'easeOut',
+              delay: index * 0.1,
+            }}
+            layout
+          >
+            <OrderCard order={order} onDelete={() => handleDelete(order.id)} />
+          </motion.div>
+        ))}
+      </AnimatePresence>
+
+      <ModalDelete
+        isOpen={selectedOrderId !== null}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+        message="Вы уверены, что хотите удалить этот приход?"
+      />
+    </div>
   );
 };
