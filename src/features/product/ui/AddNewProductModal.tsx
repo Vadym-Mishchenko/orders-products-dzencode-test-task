@@ -90,7 +90,6 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
       title="Создать новый продукт"
     >
       <form noValidate>
-        {/* Название */}
         <div className="mb-3">
           <label htmlFor="title" className="form-label">
             Название <sup style={{ color: 'red' }}>*</sup>
@@ -104,7 +103,6 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
           {errors.title && <div className="invalid-feedback">{errors.title.message}</div>}
         </div>
 
-        {/* Серийный номер */}
         <div className="mb-3">
           <label htmlFor="serialNumber" className="form-label">
             Серийный номер <sup style={{ color: 'red' }}>*</sup>
@@ -124,7 +122,6 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
           )}
         </div>
 
-        {/* Тип */}
         <div className="mb-3">
           <label htmlFor="type" className="form-label">
             Тип <sup style={{ color: 'red' }}>*</sup>
@@ -142,7 +139,6 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
           {errors.type && <div className="invalid-feedback">{errors.type.message}</div>}
         </div>
 
-        {/* Состояние */}
         <div className="mb-3">
           <label htmlFor="isNew" className="form-label">
             Состояние <sup style={{ color: 'red' }}>*</sup>
@@ -158,7 +154,6 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
           {errors.isNew && <div className="invalid-feedback">{errors.isNew.message}</div>}
         </div>
 
-        {/* Спецификация */}
         <div className="mb-3">
           <label htmlFor="specification" className="form-label">
             Спецификация <sup style={{ color: 'red' }}>*</sup>
@@ -173,7 +168,6 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
           )}
         </div>
 
-        {/* Гарантия */}
         <div className="d-flex gap-2 mb-3">
           <div className="flex-grow-1">
             <label htmlFor="guaranteeStart" className="form-label">
@@ -214,7 +208,6 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
           </div>
         </div>
 
-        {/* Цена */}
         <div className="d-flex gap-2 mb-3">
           <div className="flex-grow-1">
             <label htmlFor="priceUAH" className="form-label">
@@ -251,7 +244,6 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
           </div>
         </div>
 
-        {/* Приход */}
         <div className="mb-3">
           <label htmlFor="order" className="form-label">
             Приход <sup style={{ color: 'red' }}>*</sup>
