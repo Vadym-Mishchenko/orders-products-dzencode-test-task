@@ -1,7 +1,6 @@
 import { useForm } from 'react-hook-form';
 import type { Product } from '@/features';
-import { ModalForm } from '@/shared';
-import { useAppSelector } from '@/shared';
+import { ModalForm, useAppSelector } from '@/shared';
 
 interface AddProductModalProps {
   isOpen: boolean;
@@ -11,7 +10,7 @@ interface AddProductModalProps {
 
 type FormData = {
   title: string;
-  serialNumber?: number;
+  serialNumber: number;
   isNew: '1' | '0';
   type: string;
   specification: string;
@@ -30,6 +29,7 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm<FormData>({
     defaultValues: {
       isNew: '1',
@@ -37,6 +37,9 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
       priceUSD: 0,
     },
   });
+
+  const guaranteeStart = watch('guaranteeStart');
+  const guaranteeEnd = watch('guaranteeEnd');
 
   const getPhotoByType = (type: string): string => {
     switch (type) {
@@ -54,7 +57,7 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
   const handleSubmitForm = (data: FormData) => {
     const newProduct: Product = {
       id: Date.now(),
-      serialNumber: data.serialNumber ?? 0,
+      serialNumber: data.serialNumber,
       isNew: data.isNew === '1' ? 1 : 0,
       photo: getPhotoByType(data.type),
       title: data.title,
@@ -87,6 +90,7 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
       title="Создать новый продукт"
     >
       <form noValidate>
+        {/* Название */}
         <div className="mb-3">
           <label htmlFor="title" className="form-label">
             Название <sup style={{ color: 'red' }}>*</sup>
@@ -100,15 +104,17 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
           {errors.title && <div className="invalid-feedback">{errors.title.message}</div>}
         </div>
 
+        {/* Серийный номер */}
         <div className="mb-3">
           <label htmlFor="serialNumber" className="form-label">
-            Серийный номер
+            Серийный номер <sup style={{ color: 'red' }}>*</sup>
           </label>
           <input
             id="serialNumber"
             type="number"
             className={`form-control ${errors.serialNumber ? 'is-invalid' : ''}`}
             {...register('serialNumber', {
+              required: 'Серийный номер обязателен',
               valueAsNumber: true,
               min: { value: 1, message: 'Серийный номер должен быть положительным' },
             })}
@@ -118,6 +124,7 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
           )}
         </div>
 
+        {/* Тип */}
         <div className="mb-3">
           <label htmlFor="type" className="form-label">
             Тип <sup style={{ color: 'red' }}>*</sup>
@@ -135,6 +142,7 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
           {errors.type && <div className="invalid-feedback">{errors.type.message}</div>}
         </div>
 
+        {/* Состояние */}
         <div className="mb-3">
           <label htmlFor="isNew" className="form-label">
             Состояние <sup style={{ color: 'red' }}>*</sup>
@@ -150,6 +158,7 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
           {errors.isNew && <div className="invalid-feedback">{errors.isNew.message}</div>}
         </div>
 
+        {/* Спецификация */}
         <div className="mb-3">
           <label htmlFor="specification" className="form-label">
             Спецификация <sup style={{ color: 'red' }}>*</sup>
@@ -164,31 +173,48 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
           )}
         </div>
 
+        {/* Гарантия */}
         <div className="d-flex gap-2 mb-3">
           <div className="flex-grow-1">
             <label htmlFor="guaranteeStart" className="form-label">
-              Гарантия начало
+              Гарантия начало <sup style={{ color: 'red' }}>*</sup>
             </label>
             <input
               id="guaranteeStart"
               type="date"
-              className="form-control"
-              {...register('guaranteeStart')}
+              className={`form-control ${errors.guaranteeStart ? 'is-invalid' : ''}`}
+              {...register('guaranteeStart', {
+                required: 'Дата начала гарантии обязательна',
+              })}
             />
+            {errors.guaranteeStart && (
+              <div className="invalid-feedback">{errors.guaranteeStart.message}</div>
+            )}
           </div>
+
           <div className="flex-grow-1">
             <label htmlFor="guaranteeEnd" className="form-label">
-              Гарантия конец
+              Гарантия конец <sup style={{ color: 'red' }}>*</sup>
             </label>
             <input
               id="guaranteeEnd"
               type="date"
-              className="form-control"
-              {...register('guaranteeEnd')}
+              className={`form-control ${errors.guaranteeEnd ? 'is-invalid' : ''}`}
+              {...register('guaranteeEnd', {
+                required: 'Дата окончания гарантии обязательна',
+                validate: (value) => {
+                  if (!guaranteeStart) return true;
+                  return value >= guaranteeStart || 'Дата окончания не может быть раньше начала';
+                },
+              })}
             />
+            {errors.guaranteeEnd && (
+              <div className="invalid-feedback">{errors.guaranteeEnd.message}</div>
+            )}
           </div>
         </div>
 
+        {/* Цена */}
         <div className="d-flex gap-2 mb-3">
           <div className="flex-grow-1">
             <label htmlFor="priceUAH" className="form-label">
@@ -225,6 +251,7 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
           </div>
         </div>
 
+        {/* Приход */}
         <div className="mb-3">
           <label htmlFor="order" className="form-label">
             Приход <sup style={{ color: 'red' }}>*</sup>
