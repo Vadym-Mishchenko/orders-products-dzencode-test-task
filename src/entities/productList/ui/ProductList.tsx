@@ -1,24 +1,31 @@
-import { type Product } from '@/features';
+import { useState } from 'react';
+import { assignProductsToOrder, type Product } from '@/features';
+import { useAppSelector, useAppDispatch, CardTitle } from '@/shared';
 import { CardAvatar, CardDelete, CardIndicator, CardStatus, CardTitleWithSerial } from '@/shared';
 import { motion } from 'framer-motion';
 import { FaPlus } from 'react-icons/fa';
 import './ProductList.css';
+import { AddProductToOrderModal } from '@/features';
 
 interface IProps {
-  products: Product[];
   orderId: number;
   orderTitle: string;
   onClose: () => void;
   onRemoveProduct: (orderId: number, product: Product) => void;
 }
 
-export const ProductList = ({
-  products,
-  orderId,
-  orderTitle,
-  onClose,
-  onRemoveProduct,
-}: IProps) => {
+export const ProductList = ({ orderId, orderTitle, onClose, onRemoveProduct }: IProps) => {
+  const dispatch = useAppDispatch();
+  const allProducts = useAppSelector((state) => state.product.products);
+  const products = allProducts.filter((p) => p.order === orderId);
+
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
+  const handleAddProducts = (productIds: number[]) => {
+    dispatch(assignProductsToOrder({ orderId, productIds }));
+    setIsAddModalOpen(false);
+  };
+
   return (
     <div className="product-list-wrapper">
       <button
@@ -26,15 +33,18 @@ export const ProductList = ({
         onClick={onClose}
         aria-label="Закрыть окно"
         type="button"
-      ></button>
-
+      />
       <div className="product-list border rounded shadow-sm bg-white position-relative p-3">
-        <h5 className="product-list__title fw-bold mb-3">{orderTitle}</h5>
-        <button className="product-list__add-btn d-flex align-items-center gap-2 mb-4 border-0 bg-transparent">
+        <CardTitle title={orderTitle} width="100%" bold />
+        <button
+          className="product-list__add-btn d-flex align-items-center gap-2 mb-4 border-0 bg-transparent"
+          onClick={() => setIsAddModalOpen(true)}
+          type="button"
+        >
           <div className="product-list__add-icon d-flex justify-content-center align-items-center">
             <FaPlus className="product-list__add-icon-svg" />
           </div>
-          <span className="product-list__add-text">Добавить продукт</span>
+          <span className="product-list__add-text">Добавить продукты в список</span>
         </button>
 
         {products.length === 0 ? (
@@ -71,6 +81,14 @@ export const ProductList = ({
           </ul>
         )}
       </div>
+
+      <AddProductToOrderModal
+        isOpen={isAddModalOpen}
+        onCancel={() => setIsAddModalOpen(false)}
+        onConfirm={handleAddProducts}
+        products={allProducts}
+        excludedProductIds={products.map((p) => p.id)}
+      />
     </div>
   );
 };

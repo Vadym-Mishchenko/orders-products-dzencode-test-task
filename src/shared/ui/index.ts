@@ -10,3 +10,4 @@ export * from './cardTitleWithSerial';
 export * from './cardStatus';
 export * from './cardTerm';
 export * from './cardType';
+export * from './modalForm';

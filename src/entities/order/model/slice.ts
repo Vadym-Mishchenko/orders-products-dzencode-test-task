@@ -12,21 +12,15 @@ const orderSlice = createSlice({
     setOrders(state, action: PayloadAction<Order[]>) {
       state.orders = action.payload;
     },
+    addOrder(state, action: PayloadAction<Order>) {
+      state.orders.push(action.payload);
+    },
     deleteOrder(state, action: PayloadAction<number>) {
       state.orders = state.orders.filter((order) => order.id !== action.payload);
-    },
-    removeProductFromOrder(state, action: PayloadAction<{ orderId: number; productId: number }>) {
-      const { orderId, productId } = action.payload;
-      const order = state.orders.find((order) => order.id === orderId);
-      if (order) {
-        order.products = order.products.filter(
-          (product: { id: number }) => product.id !== productId,
-        );
-      }
     },
   },
 });
 
-export const { setOrders, deleteOrder, removeProductFromOrder } = orderSlice.actions;
+export const { setOrders, addOrder, deleteOrder } = orderSlice.actions;
 export const orderReducer = orderSlice.reducer;
 export default orderReducer;

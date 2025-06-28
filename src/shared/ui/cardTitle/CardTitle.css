@@ -9,3 +9,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.order-card__title_bold {
+  font-weight: bold;
+}

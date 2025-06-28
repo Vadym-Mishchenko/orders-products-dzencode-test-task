@@ -10,28 +10,32 @@ interface Product {
   price: Price[];
 }
 
-interface IProrps {
+interface IProps {
   products: Product[];
   width: string;
 }
 
-export const CardAmount = ({ products, width }: IProrps) => {
-  const totals: Record<string, number> = {};
+export const CardAmount = ({ products, width }: IProps) => {
+  const defaultSymbols = ['UAH', 'USD'];
 
-  products.forEach((product) => {
+  const totals = products.reduce<Record<string, number>>((acc, product) => {
     product.price.forEach(({ symbol, value }) => {
-      if (!totals[symbol]) {
-        totals[symbol] = 0;
-      }
-      totals[symbol] += value;
+      acc[symbol] = (acc[symbol] || 0) + value;
     });
+    return acc;
+  }, {});
+
+  defaultSymbols.forEach((symbol) => {
+    if (!(symbol in totals)) {
+      totals[symbol] = 0;
+    }
   });
 
   return (
     <div className="amount" style={{ width }}>
-      {Object.entries(totals).map(([symbol, value]) => (
+      {defaultSymbols.map((symbol) => (
         <div key={symbol} className={symbol === 'UAH' ? 'amount--primary' : 'amount--secondary'}>
-          {value.toFixed(2)} {symbol}
+          {totals[symbol].toFixed(2)} {symbol}
         </div>
       ))}
     </div>
