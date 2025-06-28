@@ -19,6 +19,6 @@ export interface Product {
   specification: string;
   guarantee: Guarantee;
   price: ProductPrice[];
-  order: number;
+  order: number | null;
   date: string;
 }

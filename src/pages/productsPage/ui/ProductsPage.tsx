@@ -1,8 +1,15 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ProductCard, type Product, deleteProduct } from '@/features';
+import {
+  ProductCard,
+  type Product,
+  deleteProduct,
+  addProduct,
+  AddNewProductModal,
+} from '@/features';
 import { openDeleteModal, closeDeleteModal, ModalDelete } from '@/entities';
 import { useAppSelector, useAppDispatch } from '@/shared';
+import { FaPlus } from 'react-icons/fa';
 import './ProductsPage.css';
 
 export const ProductsPage = () => {
@@ -28,11 +35,17 @@ export const ProductsPage = () => {
   };
 
   const [selectedType, setSelectedType] = useState<string>('all');
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const filteredProducts =
     selectedType === 'all' ? products : products.filter((p) => p.type === selectedType);
 
   const productToDelete = products.find((p) => p.id === itemId);
+
+  const handleAddNewProduct = (product: Product) => {
+    dispatch(addProduct(product));
+    setIsAddModalOpen(false);
+  };
 
   useEffect(() => {
     const currentTypes = new Set(products.map((p) => p.type));
@@ -43,7 +56,18 @@ export const ProductsPage = () => {
 
   return (
     <div className="products-page">
-      <div className="px-3">
+      <div className="d-flex align-items-center gap-3 mb-3">
+        <button
+          className="p-3 d-flex align-items-center gap-2 border-0 bg-transparent"
+          type="button"
+          onClick={() => setIsAddModalOpen(true)}
+        >
+          <div className="product-list__add-icon d-flex justify-content-center align-items-center">
+            <FaPlus className="product-list__add-icon-svg" />
+          </div>
+          <span className="product-list__add-text">Создать продукт</span>
+        </button>
+
         <select
           className="form-select w-25"
           value={selectedType}
@@ -87,6 +111,12 @@ export const ProductsPage = () => {
         onCancel={handleCancelDelete}
         message={productToDelete ? `Вы уверены что хотите удалить этот продукт?` : undefined}
         product={productToDelete}
+      />
+
+      <AddNewProductModal
+        isOpen={isAddModalOpen}
+        onCancel={() => setIsAddModalOpen(false)}
+        onConfirm={handleAddNewProduct}
       />
     </div>
   );

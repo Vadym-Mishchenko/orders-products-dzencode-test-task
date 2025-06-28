@@ -1,4 +1,4 @@
-import type { Product } from '@/entities/product';
+import type { Product } from '@/features';
 
 export interface Order {
   id: number;

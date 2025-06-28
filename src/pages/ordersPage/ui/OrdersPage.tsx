@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { OrderCard } from '@/processes';
-import { deleteOrder, ProductList, ModalDelete, removeProductFromOrder } from '@/entities';
+import { deleteOrder, ProductList, ModalDelete, addOrder, type Order } from '@/entities';
 import { useAppSelector, useAppDispatch } from '@/shared';
 import { AnimatePresence, motion } from 'framer-motion';
-import { FaBoxOpen } from 'react-icons/fa';
+import { FaBoxOpen, FaPlus } from 'react-icons/fa';
 import type { Product } from '@/features';
+import { AddOrderModal, removeProductFromOrder } from '@/features';
 
 export const OrdersPage = () => {
   const dispatch = useAppDispatch();
@@ -18,6 +19,8 @@ export const OrdersPage = () => {
     orderId: number;
     product: Product;
   } | null>(null);
+
+  const [isAddOrderModalOpen, setIsAddOrderModalOpen] = useState(false);
 
   const handleDelete = (id: number) => {
     setSelectedOrderId(id);
@@ -54,12 +57,7 @@ export const OrdersPage = () => {
 
   const handleConfirmDeleteProduct = () => {
     if (productToDelete) {
-      dispatch(
-        removeProductFromOrder({
-          orderId: productToDelete.orderId,
-          productId: productToDelete.product.id,
-        }),
-      );
+      dispatch(removeProductFromOrder(productToDelete.product.id));
       setProductToDelete(null);
     }
   };
@@ -68,17 +66,46 @@ export const OrdersPage = () => {
     setProductToDelete(null);
   };
 
-  if (orders.length === 0) {
-    return (
-      <div className="p-5 text-center text-muted d-flex flex-column justify-content-center align-items-center h-100 w-100">
-        <FaBoxOpen size={128} className="mb-3 text-secondary" />
-        <h2>Сейчас приходов нет</h2>
-      </div>
-    );
-  }
+  const handleOpenAddOrderModal = () => {
+    setIsAddOrderModalOpen(true);
+  };
+
+  const handleCancelAddOrderModal = () => {
+    setIsAddOrderModalOpen(false);
+  };
+
+  const handleConfirmAddOrder = (newOrder: Omit<Order, 'id' | 'products'>) => {
+    const orderToAdd: Order = {
+      ...newOrder,
+      id: Date.now(),
+      products: [],
+    };
+    dispatch(addOrder(orderToAdd));
+    setIsAddOrderModalOpen(false);
+  };
 
   return (
     <div className="orders-list d-flex flex-column gap-2 p-5 h-100" style={{ overflowY: 'auto' }}>
+      <h4>Приходы / {orders.length}</h4>
+
+      <button
+        style={{ width: 'max-content' }}
+        className="product-list__add-btn d-flex align-items-center gap-2 mb-4 border-0 bg-transparent"
+        onClick={handleOpenAddOrderModal}
+      >
+        <div className="product-list__add-icon d-flex justify-content-center align-items-center">
+          <FaPlus className="product-list__add-icon-svg" />
+        </div>
+        <span className="product-list__add-text">Добавить приход</span>
+      </button>
+
+      {orders.length === 0 && (
+        <div className="p-5 text-center text-muted d-flex flex-column justify-content-center align-items-center h-100 w-100">
+          <FaBoxOpen size={128} className="mb-3 text-secondary" />
+          <h2>Сейчас приходов нет</h2>
+        </div>
+      )}
+
       <AnimatePresence>
         {orders.map((order, index) => (
           <div key={order.id} className="position-relative" style={{ minHeight: '70px' }}>
@@ -118,7 +145,6 @@ export const OrdersPage = () => {
                 }}
               >
                 <ProductList
-                  products={order.products}
                   orderId={order.id}
                   orderTitle={order.title}
                   onClose={closeProductList}
@@ -143,6 +169,12 @@ export const OrdersPage = () => {
         onCancel={handleCancelDeleteProduct}
         message="Вы уверены, что хотите удалить этот продукт из списка заказа?"
         product={productToDelete?.product}
+      />
+
+      <AddOrderModal
+        isOpen={isAddOrderModalOpen}
+        onCancel={handleCancelAddOrderModal}
+        onConfirm={handleConfirmAddOrder}
       />
     </div>
   );
