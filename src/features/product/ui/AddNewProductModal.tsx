@@ -39,7 +39,6 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
   });
 
   const guaranteeStart = watch('guaranteeStart');
-  const guaranteeEnd = watch('guaranteeEnd');
 
   const getPhotoByType = (type: string): string => {
     switch (type) {

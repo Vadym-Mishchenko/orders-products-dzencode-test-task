@@ -3,17 +3,16 @@ import { Link } from 'react-router-dom';
 import { Container, Row, Col, Form } from 'react-bootstrap';
 import { FiClock } from 'react-icons/fi';
 import { FaUserShield, FaUsers } from 'react-icons/fa';
+import { useAppSelector, useSocketSession } from '@/shared';
 
 export const TopMenu = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [sessionsCount, setSessionsCount] = useState<number>(0);
+  const { count: sessionsCount } = useAppSelector((state) => state.session);
+  useSocketSession();
 
   useEffect(() => {
     const interval = setInterval(() => setCurrentTime(new Date()), 1000);
-
-    return () => {
-      clearInterval(interval);
-    };
+    return () => clearInterval(interval);
   }, []);
 
   const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
