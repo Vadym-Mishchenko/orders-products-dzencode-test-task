@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { deleteModalReducer, orderReducer } from '@/entities';
+import { deleteModalReducer, orderReducer, sessionReducer } from '@/entities';
 import { productReducer } from '@/features';
 
 export const store = configureStore({
@@ -7,6 +7,7 @@ export const store = configureStore({
     order: orderReducer,
     product: productReducer,
     deleteModal: deleteModalReducer,
+    session: sessionReducer,
   },
 });
 
