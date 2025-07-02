@@ -1,12 +1,16 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { Product } from '@/features';
+import { fetchProducts, type Product } from '@/features';
 
 interface ProductState {
   products: Product[];
+  loading: boolean;
+  error: string | null;
 }
 
 const initialState: ProductState = {
   products: [],
+  loading: false,
+  error: null,
 };
 
 const productSlice = createSlice({
@@ -36,6 +40,24 @@ const productSlice = createSlice({
         product.order = null;
       }
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchProducts.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchProducts.fulfilled, (state, action: PayloadAction<Product[]>) => {
+        state.products = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchProducts.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          typeof action.payload === 'string'
+            ? action.payload
+            : (action.error.message ?? 'Failed to fetch products');
+      });
   },
 });
 

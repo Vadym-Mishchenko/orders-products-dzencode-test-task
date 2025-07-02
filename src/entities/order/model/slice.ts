@@ -1,8 +1,16 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { Order, OrderState } from './types';
+import { fetchOrders } from '@/features/order/api/ordersThunks';
 
-const initialState: OrderState = {
+interface ExtendedOrderState extends OrderState {
+  loading: boolean;
+  error: string | null;
+}
+
+const initialState: ExtendedOrderState = {
   orders: [],
+  loading: false,
+  error: null,
 };
 
 const orderSlice = createSlice({
@@ -18,6 +26,21 @@ const orderSlice = createSlice({
     deleteOrder(state, action: PayloadAction<number>) {
       state.orders = state.orders.filter((order) => order.id !== action.payload);
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchOrders.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchOrders.fulfilled, (state, action: PayloadAction<Order[]>) => {
+        state.orders = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchOrders.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload ?? 'Failed to fetch orders';
+      });
   },
 });
 

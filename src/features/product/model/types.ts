@@ -22,3 +22,19 @@ export interface Product {
   order: number | null;
   date: string;
 }
+
+export interface ApiProduct {
+  id: number;
+  serialNumber: number;
+  isNew: 0 | 1;
+  photo: string;
+  title: string;
+  type: string;
+  specification: string;
+  guaranteeStart: string;
+  guaranteeEnd: string;
+  priceValueUSD: number;
+  priceValueUAH: number;
+  orderId: number | null;
+  date: string;
+}

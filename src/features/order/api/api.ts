@@ -1,38 +1,52 @@
+import { Order } from '@/entities';
+import { adaptOrderFromApi, adaptOrderToApi } from '../lib';
+
 const API_URL = 'http://localhost:5000/api/orders';
 
-export const fetchOrders = async () => {
+export const fetchOrders = async (): Promise<Order[]> => {
   const response = await fetch(API_URL);
   if (!response.ok) throw new Error('Failed to fetch orders');
-  return response.json();
+
+  const data = await response.json();
+  return data.map(adaptOrderFromApi);
 };
 
-export const createOrder = async (data: { title: string; description: string; date: string }) => {
+export const createOrder = async (order: Omit<Order, 'id' | 'products'>): Promise<Order> => {
+  const payload = adaptOrderToApi(order);
+
   const response = await fetch(API_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
+    body: JSON.stringify(payload),
   });
+
   if (!response.ok) throw new Error('Failed to create order');
-  return response.json();
+  const data = await response.json();
+  return adaptOrderFromApi(data);
 };
 
 export const updateOrder = async (
   id: number,
-  data: { title: string; description: string; date: string },
-) => {
+  order: Omit<Order, 'id' | 'products'>,
+): Promise<Order> => {
+  const payload = adaptOrderToApi(order);
+
   const response = await fetch(`${API_URL}/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
+    body: JSON.stringify(payload),
   });
+
   if (!response.ok) throw new Error('Failed to update order');
-  return response.json();
+  const data = await response.json();
+  return adaptOrderFromApi(data);
 };
 
-export const deleteOrder = async (id: number) => {
+export const deleteOrder = async (id: number): Promise<{ message: string }> => {
   const response = await fetch(`${API_URL}/${id}`, {
     method: 'DELETE',
   });
+
   if (!response.ok) throw new Error('Failed to delete order');
   return response.json();
 };

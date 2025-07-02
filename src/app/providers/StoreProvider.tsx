@@ -1,9 +1,8 @@
 import { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { store } from '../store/store';
-import { setOrders } from '@/entities';
-import { setProducts } from '@/features';
-import { orders, products } from '@/shared';
+import { fetchOrders } from '@/features/order/api/ordersThunks';
+import { fetchProducts } from '@/features/product/api/productsThunks';
 
 interface Props {
   children: React.ReactNode;
@@ -11,8 +10,15 @@ interface Props {
 
 export const StoreProvider = ({ children }: Props) => {
   useEffect(() => {
-    store.dispatch(setOrders(orders));
-    store.dispatch(setProducts(products));
+    const loadData = async () => {
+      try {
+        await Promise.all([store.dispatch(fetchOrders()), store.dispatch(fetchProducts())]);
+      } catch (error) {
+        console.error('Ошибка загрузки данных:', error);
+      }
+    };
+
+    loadData();
   }, []);
 
   return <Provider store={store}>{children}</Provider>;
