@@ -1,0 +1,33 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Order {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?
+  date        DateTime
+  products    Product[]
+}
+
+model Product {
+  id              Int       @id @default(autoincrement())
+  serialNumber    Int
+  isNew           Boolean
+  photo           String
+  title           String
+  type            String
+  specification   String
+  guaranteeStart  DateTime
+  guaranteeEnd    DateTime
+  priceValueUSD   Float
+  priceValueUAH   Float
+  orderId         Int?
+  order           Order?    @relation(fields: [orderId], references: [id])
+  date            DateTime
+}

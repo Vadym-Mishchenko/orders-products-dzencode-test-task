@@ -1,0 +1,148 @@
+import express from 'express';
+import cors from 'cors';
+import { PrismaClient } from '@prisma/client';
+
+const app = express();
+const PORT = 5000;
+const prisma = new PrismaClient();
+
+app.use(cors());
+app.use(express.json());
+
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok' });
+});
+
+// Заказы
+app.get('/api/orders', async (req, res) => {
+  try {
+    const orders = await prisma.order.findMany({ include: { products: true } });
+    res.json(orders);
+  } catch {
+    res.status(500).json({ error: 'Failed to fetch orders' });
+  }
+});
+
+app.post('/api/orders', async (req, res) => {
+  try {
+    const { title, description, date } = req.body;
+    const order = await prisma.order.create({
+      data: { title, description, date: new Date(date) },
+    });
+    res.status(201).json(order);
+  } catch {
+    res.status(500).json({ error: 'Failed to create order' });
+  }
+});
+
+app.put('/api/orders/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, description, date } = req.body;
+    const order = await prisma.order.update({
+      where: { id: Number(id) },
+      data: { title, description, date: new Date(date) },
+    });
+    res.json(order);
+  } catch {
+    res.status(500).json({ error: 'Failed to update order' });
+  }
+});
+
+app.delete('/api/orders/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    await prisma.product.deleteMany({ where: { orderId: Number(id) } }); // удаляем продукты заказа
+    await prisma.order.delete({ where: { id: Number(id) } });
+    res.json({ message: 'Order deleted' });
+  } catch {
+    res.status(500).json({ error: 'Failed to delete order' });
+  }
+});
+
+// Продукты
+app.get('/api/products', async (req, res) => {
+  try {
+    const products = await prisma.product.findMany();
+    res.json(products);
+  } catch {
+    res.status(500).json({ error: 'Failed to fetch products' });
+  }
+});
+
+app.post('/api/products', async (req, res) => {
+  try {
+    const {
+      serialNumber,
+      isNew,
+      photo,
+      title,
+      type,
+      specification,
+      guaranteeStart,
+      guaranteeEnd,
+      priceValueUSD,
+      priceValueUAH,
+      orderId,
+      date,
+    } = req.body;
+
+    const product = await prisma.product.create({
+      data: {
+        serialNumber,
+        isNew,
+        photo,
+        title,
+        type,
+        specification,
+        guaranteeStart: new Date(guaranteeStart),
+        guaranteeEnd: new Date(guaranteeEnd),
+        priceValueUSD,
+        priceValueUAH,
+        orderId,
+        date: new Date(date),
+      },
+    });
+    res.status(201).json(product);
+  } catch (error) {
+    console.error('Create product error:', error);
+    res.status(500).json({
+      error: 'Failed to create product',
+      details: error instanceof Error ? error.message : error,
+    });
+  }
+});
+
+app.put('/api/products/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = req.body;
+    if (data.guaranteeStart) data.guaranteeStart = new Date(data.guaranteeStart);
+    if (data.guaranteeEnd) data.guaranteeEnd = new Date(data.guaranteeEnd);
+    if (data.date) data.date = new Date(data.date);
+
+    const product = await prisma.product.update({
+      where: { id: Number(id) },
+      data,
+    });
+    res.json(product);
+  } catch {
+    res.status(500).json({ error: 'Failed to update product' });
+  }
+});
+
+app.delete('/api/products/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    await prisma.product.delete({ where: { id: Number(id) } });
+    res.json({ message: 'Product deleted' });
+  } catch {
+    res.status(500).json({ error: 'Failed to delete product' });
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`REST API server listening on http://localhost:${PORT}`);
+});
+
+export default app;
