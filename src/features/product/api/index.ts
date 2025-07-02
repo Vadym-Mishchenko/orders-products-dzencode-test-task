@@ -1,2 +1,7 @@
 export * from './api';
-export { fetchProducts } from './productsThunks';
+export {
+  fetchProductsThunk,
+  createProductThunk,
+  deleteProductThunk,
+  updateProductOrderThunk,
+} from './productsThunks';

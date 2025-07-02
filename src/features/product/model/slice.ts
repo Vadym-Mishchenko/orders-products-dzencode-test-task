@@ -1,5 +1,12 @@
+// features/product/productSlice.ts
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { fetchProducts, type Product } from '@/features';
+import {
+  fetchProductsThunk,
+  createProductThunk,
+  deleteProductThunk,
+  type Product,
+  updateProductOrderThunk,
+} from '@/features';
 
 interface ProductState {
   products: Product[];
@@ -16,58 +23,79 @@ const initialState: ProductState = {
 const productSlice = createSlice({
   name: 'product',
   initialState,
-  reducers: {
-    setProducts(state, action: PayloadAction<Product[]>) {
-      state.products = action.payload;
-    },
-    addProduct(state, action: PayloadAction<Product>) {
-      state.products.push(action.payload);
-    },
-    deleteProduct(state, action: PayloadAction<number>) {
-      state.products = state.products.filter((p) => p.id !== action.payload);
-    },
-    assignProductsToOrder(state, action: PayloadAction<{ orderId: number; productIds: number[] }>) {
-      const { orderId, productIds } = action.payload;
-      state.products.forEach((product) => {
-        if (productIds.includes(product.id)) {
-          product.order = orderId;
-        }
-      });
-    },
-    removeProductFromOrder(state, action: PayloadAction<number>) {
-      const product = state.products.find((p) => p.id === action.payload);
-      if (product) {
-        product.order = null;
-      }
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchProducts.pending, (state) => {
+      // загрузка продуктов
+      .addCase(fetchProductsThunk.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchProducts.fulfilled, (state, action: PayloadAction<Product[]>) => {
+      .addCase(fetchProductsThunk.fulfilled, (state, action: PayloadAction<Product[]>) => {
         state.products = action.payload;
         state.loading = false;
       })
-      .addCase(fetchProducts.rejected, (state, action) => {
+      .addCase(fetchProductsThunk.rejected, (state, action) => {
         state.loading = false;
         state.error =
           typeof action.payload === 'string'
             ? action.payload
             : (action.error.message ?? 'Failed to fetch products');
+      })
+      // создание продукта
+      .addCase(createProductThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createProductThunk.fulfilled, (state, action: PayloadAction<Product>) => {
+        state.products.push(action.payload);
+        state.loading = false;
+      })
+      .addCase(createProductThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          typeof action.payload === 'string'
+            ? action.payload
+            : (action.error.message ?? 'Failed to create product');
+      })
+      // удаление продукта
+      .addCase(deleteProductThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteProductThunk.fulfilled, (state, action: PayloadAction<number>) => {
+        state.products = state.products.filter((p) => p.id !== action.payload);
+        state.loading = false;
+      })
+      .addCase(deleteProductThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          typeof action.payload === 'string'
+            ? action.payload
+            : (action.error.message ?? 'Failed to delete product');
+      })
+      // обновление поля order у продукта
+      .addCase(updateProductOrderThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateProductOrderThunk.fulfilled, (state, action: PayloadAction<Product>) => {
+        const updatedProduct = action.payload;
+        const index = state.products.findIndex((p) => p.id === updatedProduct.id);
+        if (index !== -1) {
+          state.products[index] = updatedProduct;
+        }
+        state.loading = false;
+      })
+      .addCase(updateProductOrderThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          typeof action.payload === 'string'
+            ? action.payload
+            : (action.error.message ?? 'Failed to update product order');
       });
   },
 });
-
-export const {
-  setProducts,
-  addProduct,
-  deleteProduct,
-  assignProductsToOrder,
-  removeProductFromOrder,
-} = productSlice.actions;
 
 export const productReducer = productSlice.reducer;
 export default productReducer;

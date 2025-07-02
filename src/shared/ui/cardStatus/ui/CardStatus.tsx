@@ -1,5 +1,5 @@
 interface Iprops {
-  isNew: number;
+  isNew: boolean;
   width: string;
 }
 

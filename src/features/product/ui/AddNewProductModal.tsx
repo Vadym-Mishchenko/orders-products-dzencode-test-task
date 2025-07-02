@@ -11,7 +11,7 @@ interface AddProductModalProps {
 type FormData = {
   title: string;
   serialNumber: number;
-  isNew: '1' | '0';
+  isNew: string;
   type: string;
   specification: string;
   guaranteeStart: string;
@@ -32,7 +32,7 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
     watch,
   } = useForm<FormData>({
     defaultValues: {
-      isNew: '1',
+      isNew: 'true',
       priceUAH: 0,
       priceUSD: 0,
     },
@@ -57,7 +57,7 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
     const newProduct: Product = {
       id: Date.now(),
       serialNumber: data.serialNumber,
-      isNew: data.isNew === '1' ? 1 : 0,
+      isNew: data.isNew === 'true',
       photo: getPhotoByType(data.type),
       title: data.title,
       type: data.type,
@@ -147,8 +147,8 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
             className={`form-select ${errors.isNew ? 'is-invalid' : ''}`}
             {...register('isNew', { required: 'Состояние обязательно' })}
           >
-            <option value="1">Новый</option>
-            <option value="0">Б/У</option>
+            <option value="true">Новый</option>
+            <option value="false">Б/У</option>
           </select>
           {errors.isNew && <div className="invalid-feedback">{errors.isNew.message}</div>}
         </div>

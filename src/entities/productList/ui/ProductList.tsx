@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { assignProductsToOrder, type Product } from '@/features';
+import { updateProductOrderThunk, type Product } from '@/features';
 import { useAppSelector, useAppDispatch, CardTitle } from '@/shared';
 import { CardAvatar, CardDelete, CardIndicator, CardStatus, CardTitleWithSerial } from '@/shared';
 import { motion } from 'framer-motion';
@@ -22,7 +22,9 @@ export const ProductList = ({ orderId, orderTitle, onClose, onRemoveProduct }: I
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const handleAddProducts = (productIds: number[]) => {
-    dispatch(assignProductsToOrder({ orderId, productIds }));
+    productIds.forEach((productId) => {
+      dispatch(updateProductOrderThunk({ productId, orderId }));
+    });
     setIsAddModalOpen(false);
   };
 

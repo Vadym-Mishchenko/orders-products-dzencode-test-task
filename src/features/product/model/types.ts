@@ -12,7 +12,7 @@ export interface Guarantee {
 export interface Product {
   id: number;
   serialNumber: number;
-  isNew: 0 | 1;
+  isNew: boolean;
   photo: string;
   title: string;
   type: string;
@@ -26,7 +26,7 @@ export interface Product {
 export interface ApiProduct {
   id: number;
   serialNumber: number;
-  isNew: 0 | 1;
+  isNew: boolean;
   photo: string;
   title: string;
   type: string;

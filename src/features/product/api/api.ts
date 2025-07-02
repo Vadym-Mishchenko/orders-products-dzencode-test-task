@@ -11,7 +11,7 @@ export const fetchProducts = async (): Promise<Product[]> => {
   return data.map(adaptProductFromApi);
 };
 
-export const createProduct = async (product: Product): Promise<Product> => {
+export const createProduct = async (product: Omit<Product, 'id'>): Promise<Product> => {
   const payload = adaptProductToApi(product);
 
   const response = await fetch(PRODUCTS_API_URL, {
@@ -27,7 +27,7 @@ export const createProduct = async (product: Product): Promise<Product> => {
 };
 
 export const updateProduct = async (id: number, product: Partial<Product>): Promise<Product> => {
-  const payload = adaptProductToApi(product as Product); // можно улучшить в будущем
+  const payload = adaptProductToApi(product as Product);
 
   const response = await fetch(`${PRODUCTS_API_URL}/${id}`, {
     method: 'PUT',
@@ -47,5 +47,6 @@ export const deleteProduct = async (id: number) => {
   });
 
   if (!response.ok) throw new Error('Failed to delete product');
+
   return response.json();
 };

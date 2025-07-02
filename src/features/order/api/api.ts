@@ -25,23 +25,6 @@ export const createOrder = async (order: Omit<Order, 'id' | 'products'>): Promis
   return adaptOrderFromApi(data);
 };
 
-export const updateOrder = async (
-  id: number,
-  order: Omit<Order, 'id' | 'products'>,
-): Promise<Order> => {
-  const payload = adaptOrderToApi(order);
-
-  const response = await fetch(`${API_URL}/${id}`, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
-
-  if (!response.ok) throw new Error('Failed to update order');
-  const data = await response.json();
-  return adaptOrderFromApi(data);
-};
-
 export const deleteOrder = async (id: number): Promise<{ message: string }> => {
   const response = await fetch(`${API_URL}/${id}`, {
     method: 'DELETE',
