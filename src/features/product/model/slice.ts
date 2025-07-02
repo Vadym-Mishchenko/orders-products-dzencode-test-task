@@ -1,4 +1,3 @@
-// features/product/productSlice.ts
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import {
   fetchProductsThunk,

@@ -56,9 +56,15 @@ app.put('/api/orders/:id', async (req, res) => {
 app.delete('/api/orders/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    await prisma.product.deleteMany({ where: { orderId: Number(id) } });
+
+    await prisma.product.updateMany({
+      where: { orderId: Number(id) },
+      data: { orderId: null },
+    });
+
     await prisma.order.delete({ where: { id: Number(id) } });
-    res.json({ message: 'Order deleted' });
+
+    res.json({ message: 'Order deleted, products detached' });
   } catch {
     res.status(500).json({ error: 'Failed to delete order' });
   }
