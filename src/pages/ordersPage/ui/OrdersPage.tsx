@@ -54,7 +54,6 @@ export const OrdersPage = () => {
 
   const toggleCollapse = (id: number) => {
     if (isCollapsed && activeCollapsedOrderId === id) {
-      // Развернуть назад
       setIsCollapsed(false);
       setActiveCollapsedOrderId(null);
     } else {
@@ -91,14 +90,12 @@ export const OrdersPage = () => {
     setIsAddOrderModalOpen(false);
   };
 
-  // Теперь создание заказа через thunk
   const handleConfirmAddOrder = async (newOrder: Omit<Order, 'id' | 'products'>) => {
     try {
       await dispatch(createOrderThunk(newOrder)).unwrap();
       setIsAddOrderModalOpen(false);
     } catch (err) {
       console.error('Ошибка при создании заказа:', err);
-      // Можно показать уведомление пользователю
     }
   };
 
