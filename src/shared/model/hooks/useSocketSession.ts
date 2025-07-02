@@ -7,15 +7,19 @@ export const useSocketSession = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    socket.connect();
+    if (!socket.connected) {
+      socket.connect();
+    }
 
-    socket.on('sessionCount', (count: number) => {
+    const onSessionCount = (count: number) => {
       dispatch(setSessionCount(count));
-    });
+    };
+
+    socket.on('sessionCount', onSessionCount);
 
     return () => {
-      socket.off('sessionCount');
-      socket.disconnect();
+      socket.off('sessionCount', onSessionCount);
+      // socket.disconnect();
     };
   }, [dispatch]);
 };

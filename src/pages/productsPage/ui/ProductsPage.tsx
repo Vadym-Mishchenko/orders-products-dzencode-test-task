@@ -1,16 +1,11 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import {
-  ProductCard,
-  type Product,
-  deleteProduct,
-  addProduct,
-  AddNewProductModal,
-} from '@/features';
+import { ProductCard, type Product, AddNewProductModal } from '@/features';
 import { openDeleteModal, closeDeleteModal, ModalDelete } from '@/entities';
 import { useAppSelector, useAppDispatch } from '@/shared';
 import { FaPlus } from 'react-icons/fa';
 import './ProductsPage.css';
+import { createProductThunk, deleteProductThunk } from '@/features';
 
 export const ProductsPage = () => {
   const dispatch = useAppDispatch();
@@ -23,10 +18,14 @@ export const ProductsPage = () => {
     dispatch(openDeleteModal({ itemType: 'product', itemId: product.id }));
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (itemId) {
-      dispatch(deleteProduct(itemId));
-      dispatch(closeDeleteModal());
+      try {
+        await dispatch(deleteProductThunk(itemId)).unwrap();
+        dispatch(closeDeleteModal());
+      } catch (error) {
+        console.error('Ошибка при удалении продукта:', error);
+      }
     }
   };
 
@@ -42,9 +41,13 @@ export const ProductsPage = () => {
 
   const productToDelete = products.find((p) => p.id === itemId);
 
-  const handleAddNewProduct = (product: Product) => {
-    dispatch(addProduct(product));
-    setIsAddModalOpen(false);
+  const handleAddNewProduct = async (productData: Omit<Product, 'id'>) => {
+    try {
+      await dispatch(createProductThunk(productData)).unwrap();
+      setIsAddModalOpen(false);
+    } catch (error) {
+      console.error('Ошибка при создании продукта:', error);
+    }
   };
 
   useEffect(() => {

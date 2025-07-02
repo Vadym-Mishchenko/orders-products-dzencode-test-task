@@ -1,15 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { OrderCard } from '@/processes';
-import { deleteOrder, ProductList, ModalDelete, addOrder, type Order } from '@/entities';
+import {
+  deleteOrderThunk,
+  fetchOrdersThunk,
+  createOrderThunk,
+  AddOrderModal,
+  updateProductOrderThunk,
+} from '@/features';
 import { useAppSelector, useAppDispatch } from '@/shared';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FaBoxOpen, FaPlus } from 'react-icons/fa';
 import type { Product } from '@/features';
-import { AddOrderModal, removeProductFromOrder } from '@/features';
+import { ModalDelete, Order, ProductList } from '@/entities';
 
 export const OrdersPage = () => {
   const dispatch = useAppDispatch();
-  const { orders } = useAppSelector((state) => state.order);
+  const { orders, loading, error } = useAppSelector((state) => state.order);
 
   const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -22,13 +28,18 @@ export const OrdersPage = () => {
 
   const [isAddOrderModalOpen, setIsAddOrderModalOpen] = useState(false);
 
+  // Загрузка заказов при монтировании
+  useEffect(() => {
+    dispatch(fetchOrdersThunk());
+  }, [dispatch]);
+
   const handleDelete = (id: number) => {
     setSelectedOrderId(id);
   };
 
   const handleConfirmDeleteOrder = () => {
     if (selectedOrderId !== null) {
-      dispatch(deleteOrder(selectedOrderId));
+      dispatch(deleteOrderThunk(selectedOrderId));
       setSelectedOrderId(null);
       if (activeCollapsedOrderId === selectedOrderId) {
         setActiveCollapsedOrderId(null);
@@ -42,8 +53,14 @@ export const OrdersPage = () => {
   };
 
   const toggleCollapse = (id: number) => {
-    setIsCollapsed(true);
-    setActiveCollapsedOrderId(id);
+    if (isCollapsed && activeCollapsedOrderId === id) {
+      // Развернуть назад
+      setIsCollapsed(false);
+      setActiveCollapsedOrderId(null);
+    } else {
+      setIsCollapsed(true);
+      setActiveCollapsedOrderId(id);
+    }
   };
 
   const closeProductList = () => {
@@ -57,7 +74,7 @@ export const OrdersPage = () => {
 
   const handleConfirmDeleteProduct = () => {
     if (productToDelete) {
-      dispatch(removeProductFromOrder(productToDelete.product.id));
+      dispatch(updateProductOrderThunk({ productId: productToDelete.product.id, orderId: null }));
       setProductToDelete(null);
     }
   };
@@ -74,19 +91,23 @@ export const OrdersPage = () => {
     setIsAddOrderModalOpen(false);
   };
 
-  const handleConfirmAddOrder = (newOrder: Omit<Order, 'id' | 'products'>) => {
-    const orderToAdd: Order = {
-      ...newOrder,
-      id: Date.now(),
-      products: [],
-    };
-    dispatch(addOrder(orderToAdd));
-    setIsAddOrderModalOpen(false);
+  // Теперь создание заказа через thunk
+  const handleConfirmAddOrder = async (newOrder: Omit<Order, 'id' | 'products'>) => {
+    try {
+      await dispatch(createOrderThunk(newOrder)).unwrap();
+      setIsAddOrderModalOpen(false);
+    } catch (err) {
+      console.error('Ошибка при создании заказа:', err);
+      // Можно показать уведомление пользователю
+    }
   };
 
   return (
     <div className="orders-list d-flex flex-column gap-2 p-5 h-100" style={{ overflowY: 'auto' }}>
-      <h4>Приходы / {orders.length}</h4>
+      <h4>
+        Приходы / {loading ? 'Загрузка...' : orders.length}
+        {error && <span style={{ color: 'red', marginLeft: 10 }}>{error}</span>}
+      </h4>
 
       <button
         style={{ width: 'max-content' }}
@@ -99,7 +120,7 @@ export const OrdersPage = () => {
         <span className="product-list__add-text">Добавить приход</span>
       </button>
 
-      {orders.length === 0 && (
+      {orders.length === 0 && !loading && (
         <div className="p-5 text-center text-muted d-flex flex-column justify-content-center align-items-center h-100 w-100">
           <FaBoxOpen size={128} className="mb-3 text-secondary" />
           <h2>Сейчас приходов нет</h2>

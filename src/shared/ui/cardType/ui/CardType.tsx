@@ -1,10 +1,10 @@
 interface IProps {
-  isNew: 0 | 1;
+  isNew: boolean;
   width: string;
 }
 
 export const CardType = ({ isNew, width }: IProps) => {
-  const typeText = isNew === 1 ? 'новый' : 'Б / У';
+  const typeText = isNew ? 'новый' : 'Б / У';
 
   return <div style={{ width, minWidth: '48px' }}>{typeText}</div>;
 };
