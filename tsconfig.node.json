@@ -7,7 +7,7 @@
     "skipLibCheck": true,
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
-    "noEmit": true, // <-- добавь эту строку
+    "noEmit": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
     "outDir": "./dist",

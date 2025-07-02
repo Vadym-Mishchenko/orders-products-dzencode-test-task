@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import { PrismaClient } from '@prisma/client';
+import http from 'http';
+import { Server } from 'socket.io';
 
 const app = express();
 const PORT = 5000;
@@ -9,6 +11,8 @@ const prisma = new PrismaClient();
 app.use(cors());
 app.use(express.json());
 
+// --- REST API ---
+// Проверка сервера
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok' });
 });
@@ -52,7 +56,7 @@ app.put('/api/orders/:id', async (req, res) => {
 app.delete('/api/orders/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    await prisma.product.deleteMany({ where: { orderId: Number(id) } }); // удаляем продукты заказа
+    await prisma.product.deleteMany({ where: { orderId: Number(id) } });
     await prisma.order.delete({ where: { id: Number(id) } });
     res.json({ message: 'Order deleted' });
   } catch {
@@ -141,8 +145,23 @@ app.delete('/api/products/:id', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`REST API server listening on http://localhost:${PORT}`);
+// --- Socket.io ---
+const server = http.createServer(app);
+const io = new Server(server, { cors: { origin: '*' } });
+
+let sessionCount = 0;
+
+io.on('connection', (socket) => {
+  sessionCount++;
+  io.emit('sessionCount', sessionCount);
+
+  socket.on('disconnect', () => {
+    sessionCount = Math.max(0, sessionCount - 1);
+    io.emit('sessionCount', sessionCount);
+  });
 });
 
-export default app;
+// Запуск сервера
+server.listen(PORT, () => {
+  console.log(`Server listening on http://localhost:${PORT}`);
+});
