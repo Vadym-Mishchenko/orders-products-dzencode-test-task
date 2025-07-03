@@ -1,15 +1,27 @@
+import { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useNavItems } from '../config';
 import { FaCog, FaUserCircle } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import './Sidebar.css';
 
+const STORAGE_KEY = 'appLanguage';
+
 export const Sidebar = () => {
   const { i18n } = useTranslation();
   const navItems = useNavItems();
 
+  useEffect(() => {
+    const savedLang = localStorage.getItem(STORAGE_KEY);
+    if (savedLang && savedLang !== i18n.language) {
+      i18n.changeLanguage(savedLang);
+    }
+  }, [i18n]);
+
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    i18n.changeLanguage(e.target.value);
+    const lang = e.target.value;
+    i18n.changeLanguage(lang);
+    localStorage.setItem(STORAGE_KEY, lang);
   };
 
   return (
