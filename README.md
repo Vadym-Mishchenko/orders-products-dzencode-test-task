@@ -94,6 +94,17 @@ SPA-приложение для управления заказами (Orders) �
    ```bash
     docker-compose up
    ```
+   Открыть в браузере
+   - Фронтенд:
+   ```bash
+   http://localhost:5173/orders
+   ```
+
+   - Бэкенд:
+   ```bash
+   http://localhost:5000/api/orders
+   http://localhost:5000/api/products
+   ```
 
 ---
 
