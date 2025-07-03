@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form';
 import type { Product } from '@/features';
 import { ModalForm, useAppSelector } from '@/shared';
+import { useTranslation } from 'react-i18next';
 
 interface AddProductModalProps {
   isOpen: boolean;
@@ -22,6 +23,7 @@ type FormData = {
 };
 
 export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductModalProps) => {
+  const { t } = useTranslation();
   const orders = useAppSelector((state) => state.order.orders);
 
   const {
@@ -59,9 +61,9 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
       serialNumber: data.serialNumber,
       isNew: data.isNew === 'true',
       photo: getPhotoByType(data.type),
-      title: data.title,
+      title: data.title.trim(),
       type: data.type,
-      specification: data.specification,
+      specification: data.specification.trim(),
       guarantee: {
         start: data.guaranteeStart || '',
         end: data.guaranteeEnd || '',
@@ -86,17 +88,20 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
         onCancel();
       }}
       onConfirm={handleSubmit(handleSubmitForm)}
-      title="Создать новый продукт"
+      title={t('Create new product')}
     >
       <form noValidate>
         <div className="mb-3">
           <label htmlFor="title" className="form-label">
-            Название <sup style={{ color: 'red' }}>*</sup>
+            {t('Title')} <sup style={{ color: 'red' }}>*</sup>
           </label>
           <input
             id="title"
             className={`form-control ${errors.title ? 'is-invalid' : ''}`}
-            {...register('title', { required: 'Название обязательно' })}
+            {...register('title', {
+              required: t('Title is required'),
+              validate: (value) => value.trim() !== '' || t('Title is required'),
+            })}
             autoFocus
           />
           {errors.title && <div className="invalid-feedback">{errors.title.message}</div>}
@@ -104,16 +109,16 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
 
         <div className="mb-3">
           <label htmlFor="serialNumber" className="form-label">
-            Серийный номер <sup style={{ color: 'red' }}>*</sup>
+            {t('Serial Number')} <sup style={{ color: 'red' }}>*</sup>
           </label>
           <input
             id="serialNumber"
             type="number"
             className={`form-control ${errors.serialNumber ? 'is-invalid' : ''}`}
             {...register('serialNumber', {
-              required: 'Серийный номер обязателен',
+              required: t('Serial number is required'),
               valueAsNumber: true,
-              min: { value: 1, message: 'Серийный номер должен быть положительным' },
+              min: { value: 1, message: t('Serial number must be positive') },
             })}
           />
           {errors.serialNumber && (
@@ -123,44 +128,47 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
 
         <div className="mb-3">
           <label htmlFor="type" className="form-label">
-            Тип <sup style={{ color: 'red' }}>*</sup>
+            {t('Type')} <sup style={{ color: 'red' }}>*</sup>
           </label>
           <select
             id="type"
             className={`form-select ${errors.type ? 'is-invalid' : ''}`}
-            {...register('type', { required: 'Тип обязателен' })}
+            {...register('type', { required: t('Type is required') })}
           >
-            <option value="">Выберите тип</option>
-            <option value="Monitors">Monitors</option>
-            <option value="Accessories">Accessories</option>
-            <option value="Laptops">Laptops</option>
+            <option value="">{t('Select type')}</option>
+            <option value="Monitors">{t('Monitors')}</option>
+            <option value="Accessories">{t('Accessories')}</option>
+            <option value="Laptops">{t('Laptops')}</option>
           </select>
           {errors.type && <div className="invalid-feedback">{errors.type.message}</div>}
         </div>
 
         <div className="mb-3">
           <label htmlFor="isNew" className="form-label">
-            Состояние <sup style={{ color: 'red' }}>*</sup>
+            {t('Condition')} <sup style={{ color: 'red' }}>*</sup>
           </label>
           <select
             id="isNew"
             className={`form-select ${errors.isNew ? 'is-invalid' : ''}`}
-            {...register('isNew', { required: 'Состояние обязательно' })}
+            {...register('isNew', { required: t('Condition is required') })}
           >
-            <option value="true">Новый</option>
-            <option value="false">Б/У</option>
+            <option value="true">{t('New')}</option>
+            <option value="false">{t('Used')}</option>
           </select>
           {errors.isNew && <div className="invalid-feedback">{errors.isNew.message}</div>}
         </div>
 
         <div className="mb-3">
           <label htmlFor="specification" className="form-label">
-            Спецификация <sup style={{ color: 'red' }}>*</sup>
+            {t('Specification')} <sup style={{ color: 'red' }}>*</sup>
           </label>
           <textarea
             id="specification"
             className={`form-control ${errors.specification ? 'is-invalid' : ''}`}
-            {...register('specification', { required: 'Спецификация обязательна' })}
+            {...register('specification', {
+              required: t('Specification is required'),
+              validate: (value) => value.trim() !== '' || t('Specification is required'),
+            })}
           />
           {errors.specification && (
             <div className="invalid-feedback">{errors.specification.message}</div>
@@ -170,14 +178,14 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
         <div className="d-flex gap-2 mb-3">
           <div className="flex-grow-1">
             <label htmlFor="guaranteeStart" className="form-label">
-              Гарантия начало <sup style={{ color: 'red' }}>*</sup>
+              {t('Guarantee start')} <sup style={{ color: 'red' }}>*</sup>
             </label>
             <input
               id="guaranteeStart"
               type="date"
               className={`form-control ${errors.guaranteeStart ? 'is-invalid' : ''}`}
               {...register('guaranteeStart', {
-                required: 'Дата начала гарантии обязательна',
+                required: t('Guarantee start date is required'),
               })}
             />
             {errors.guaranteeStart && (
@@ -187,17 +195,17 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
 
           <div className="flex-grow-1">
             <label htmlFor="guaranteeEnd" className="form-label">
-              Гарантия конец <sup style={{ color: 'red' }}>*</sup>
+              {t('Guarantee end')} <sup style={{ color: 'red' }}>*</sup>
             </label>
             <input
               id="guaranteeEnd"
               type="date"
               className={`form-control ${errors.guaranteeEnd ? 'is-invalid' : ''}`}
               {...register('guaranteeEnd', {
-                required: 'Дата окончания гарантии обязательна',
+                required: t('Guarantee end date is required'),
                 validate: (value) => {
                   if (!guaranteeStart) return true;
-                  return value >= guaranteeStart || 'Дата окончания не может быть раньше начала';
+                  return value >= guaranteeStart || t('End date cannot be earlier than start date');
                 },
               })}
             />
@@ -210,7 +218,7 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
         <div className="d-flex gap-2 mb-3">
           <div className="flex-grow-1">
             <label htmlFor="priceUAH" className="form-label">
-              Цена (UAH) <sup style={{ color: 'red' }}>*</sup>
+              {t('Price (UAH)')} <sup style={{ color: 'red' }}>*</sup>
             </label>
             <input
               id="priceUAH"
@@ -218,7 +226,7 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
               step="0.01"
               className={`form-control ${errors.priceUAH ? 'is-invalid' : ''}`}
               {...register('priceUAH', {
-                required: 'Цена в гривнах обязательна',
+                required: t('Price in UAH is required'),
                 valueAsNumber: true,
               })}
             />
@@ -227,7 +235,7 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
 
           <div className="flex-grow-1">
             <label htmlFor="priceUSD" className="form-label">
-              Цена (USD) <sup style={{ color: 'red' }}>*</sup>
+              {t('Price (USD)')} <sup style={{ color: 'red' }}>*</sup>
             </label>
             <input
               id="priceUSD"
@@ -235,7 +243,7 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
               step="0.01"
               className={`form-control ${errors.priceUSD ? 'is-invalid' : ''}`}
               {...register('priceUSD', {
-                required: 'Цена в долларах обязательна',
+                required: t('Price in USD is required'),
                 valueAsNumber: true,
               })}
             />
@@ -245,14 +253,14 @@ export const AddNewProductModal = ({ isOpen, onCancel, onConfirm }: AddProductMo
 
         <div className="mb-3">
           <label htmlFor="order" className="form-label">
-            Приход <sup style={{ color: 'red' }}>*</sup>
+            {t('Order')} <sup style={{ color: 'red' }}>*</sup>
           </label>
           <select
             id="order"
             className={`form-select ${errors.order ? 'is-invalid' : ''}`}
-            {...register('order', { required: 'Приход обязателен', valueAsNumber: true })}
+            {...register('order', { required: t('Order is required'), valueAsNumber: true })}
           >
-            <option value="">Выберите приход</option>
+            <option value="">{t('Select order')}</option>
             {orders.map((order) => (
               <option key={order.id} value={order.id}>
                 {order.title}

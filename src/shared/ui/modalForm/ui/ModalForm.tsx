@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import './ModalForm.css';
+import { useTranslation } from 'react-i18next';
 
 interface ModalFormProps {
   isOpen: boolean;
@@ -11,6 +12,8 @@ interface ModalFormProps {
 }
 
 export const ModalForm = ({ isOpen, onCancel, onConfirm, title, children }: ModalFormProps) => {
+  const { t } = useTranslation();
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -31,11 +34,11 @@ export const ModalForm = ({ isOpen, onCancel, onConfirm, title, children }: Moda
           >
             <div className="modal-form__content d-flex flex-column h-100">
               <div className="modal-form__header d-flex justify-content-between align-items-center">
-                <h5 className="modal-form__title mb-0">{title || 'Форма'}</h5>
+                <h5 className="modal-form__title mb-0">{title ?? t('Form')}</h5>
                 <button
                   type="button"
                   className="modal-form__close"
-                  aria-label="Закрыть"
+                  aria-label={t('Close')}
                   onClick={onCancel}
                 >
                   ×
@@ -46,10 +49,10 @@ export const ModalForm = ({ isOpen, onCancel, onConfirm, title, children }: Moda
 
               <div className="modal-form__footer d-flex justify-content-end gap-3">
                 <button type="button" className="modal-form__btn-cancel" onClick={onCancel}>
-                  Отмена
+                  {t('Cancel')}
                 </button>
                 <button type="button" className="modal-form__btn-confirm" onClick={onConfirm}>
-                  Сохранить
+                  {t('Save')}
                 </button>
               </div>
             </div>

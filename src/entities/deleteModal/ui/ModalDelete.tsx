@@ -2,6 +2,7 @@ import type { Product } from '@/features';
 import { CardAvatar, CardIndicator, CardTitleWithSerial } from '@/shared';
 import { FaTrash } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import './ModalDelete.css';
 
 interface ModalProps {
@@ -13,6 +14,8 @@ interface ModalProps {
 }
 
 export const ModalDelete = ({ isOpen, onConfirm, onCancel, message, product }: ModalProps) => {
+  const { t } = useTranslation();
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -32,7 +35,7 @@ export const ModalDelete = ({ isOpen, onConfirm, onCancel, message, product }: M
             transition={{ duration: 0.2, ease: 'easeOut' }}
           >
             <div className="modaldelete__content-inner">
-              <div className="modaldelete__header">{message ?? 'Вы уверены?'}</div>
+              <div className="modaldelete__header">{message ?? t('Are you sure?')}</div>
 
               {product && (
                 <div className="modaldelete__product-info">
@@ -48,11 +51,11 @@ export const ModalDelete = ({ isOpen, onConfirm, onCancel, message, product }: M
 
               <div className="modaldelete__footer">
                 <button className="button button--cancel" onClick={onCancel}>
-                  Отменить
+                  {t('Cancel')}
                 </button>
                 <button className="button button--confirm" onClick={onConfirm}>
                   <FaTrash style={{ marginRight: '8px' }} />
-                  Удалить
+                  {t('Delete')}
                 </button>
               </div>
             </div>
@@ -60,7 +63,7 @@ export const ModalDelete = ({ isOpen, onConfirm, onCancel, message, product }: M
             <button
               className="modaldelete__close"
               onClick={onCancel}
-              aria-label="Закрыть модалку"
+              aria-label={t('Close modal')}
               type="button"
             ></button>
           </motion.div>

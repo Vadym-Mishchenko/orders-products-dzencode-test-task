@@ -9,8 +9,10 @@ import {
 } from 'react-bootstrap';
 import { FiClock } from 'react-icons/fi';
 import { FaUserShield, FaUsers } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
 
 export const TopMenu = () => {
+  const { i18n } = useTranslation();
   const [currentTime, setCurrentTime] = useState(new Date());
   const { count: sessionsCount } = useAppSelector((state) => state.session);
   useSocketSession();
@@ -23,16 +25,17 @@ export const TopMenu = () => {
   const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
   const formatDate = (date: Date) => {
-    const weekday = new Intl.DateTimeFormat('ru-RU', { weekday: 'long' }).format(date);
+    const lang = i18n.language || 'en';
+    const weekday = new Intl.DateTimeFormat(lang, { weekday: 'long' }).format(date);
     const day = date.getDate().toString().padStart(2, '0');
-    const month = new Intl.DateTimeFormat('ru-RU', { month: 'long' }).format(date);
+    const month = new Intl.DateTimeFormat(lang, { month: 'long' }).format(date);
     const year = date.getFullYear();
 
     return `${capitalize(weekday)} ${day} ${capitalize(month)}, ${year}`;
   };
 
   const formatTime = (date: Date) =>
-    date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+    date.toLocaleTimeString(i18n.language || 'en', { hour: '2-digit', minute: '2-digit' });
 
   return (
     <div className="py-3 px-4 bg-white border-bottom shadow-sm">
