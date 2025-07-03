@@ -1,13 +1,17 @@
 type FormatType = 'shortText' | 'numeric';
 
-export const formatDate = (dateInput: string | Date, format: FormatType = 'numeric'): string => {
+export const formatDate = (
+  dateInput: string | Date,
+  format: FormatType = 'numeric',
+  locale: string = 'en-US',
+): string => {
   const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
 
   const day = String(date.getDate()).padStart(2, '0');
   const year = date.getFullYear();
 
   if (format === 'shortText') {
-    const month = date.toLocaleString('ru-RU', { month: 'short' }).replace('.', '');
+    const month = date.toLocaleString(locale, { month: 'short' }).replace('.', '');
     const capitalizedMonth = month.charAt(0).toUpperCase() + month.slice(1);
     return `${day} / ${capitalizedMonth} / ${year}`;
   }

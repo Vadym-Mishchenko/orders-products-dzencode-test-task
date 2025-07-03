@@ -7,14 +7,16 @@ import {
   AddOrderModal,
   updateProductOrderThunk,
 } from '@/features';
+import type { Product } from '@/features';
 import { useAppSelector, useAppDispatch } from '@/shared';
+import { ModalDelete, Order, ProductList } from '@/entities';
 import { AnimatePresence, motion } from 'framer-motion';
 import { FaBoxOpen, FaPlus } from 'react-icons/fa';
-import type { Product } from '@/features';
-import { ModalDelete, Order, ProductList } from '@/entities';
+import { useTranslation } from 'react-i18next';
 
 export const OrdersPage = () => {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const { orders, loading, error } = useAppSelector((state) => state.order);
 
   const [selectedOrderId, setSelectedOrderId] = useState<number | null>(null);
@@ -102,7 +104,7 @@ export const OrdersPage = () => {
   return (
     <div className="orders-list d-flex flex-column gap-2 p-5 h-100" style={{ overflowY: 'auto' }}>
       <h4>
-        Приходы / {loading ? 'Загрузка...' : orders.length}
+        {t('Orders')} / {loading ? t('Loading...') : orders.length}
         {error && <span style={{ color: 'red', marginLeft: 10 }}>{error}</span>}
       </h4>
 
@@ -114,13 +116,13 @@ export const OrdersPage = () => {
         <div className="product-list__add-icon d-flex justify-content-center align-items-center">
           <FaPlus className="product-list__add-icon-svg" />
         </div>
-        <span className="product-list__add-text">Добавить приход</span>
+        <span className="product-list__add-text">{t('Add Order')}</span>
       </button>
 
       {orders.length === 0 && !loading && (
         <div className="p-5 text-center text-muted d-flex flex-column justify-content-center align-items-center h-100 w-100">
           <FaBoxOpen size={128} className="mb-3 text-secondary" />
-          <h2>Сейчас приходов нет</h2>
+          <h2>{t('No orders yet')}</h2>
         </div>
       )}
 
@@ -178,14 +180,14 @@ export const OrdersPage = () => {
         isOpen={selectedOrderId !== null}
         onConfirm={handleConfirmDeleteOrder}
         onCancel={handleCancelDeleteOrder}
-        message="Вы уверены, что хотите удалить этот приход?"
+        message={t('Are you sure you want to delete this order?')}
       />
 
       <ModalDelete
         isOpen={productToDelete !== null}
         onConfirm={handleConfirmDeleteProduct}
         onCancel={handleCancelDeleteProduct}
-        message="Вы уверены, что хотите удалить этот продукт из списка заказа?"
+        message={t('Are you sure you want to delete this product from the order?')}
         product={productToDelete?.product}
       />
 

@@ -6,8 +6,10 @@ import { useAppSelector, useAppDispatch } from '@/shared';
 import { FaPlus } from 'react-icons/fa';
 import './ProductsPage.css';
 import { createProductThunk, deleteProductThunk } from '@/features';
+import { useTranslation } from 'react-i18next';
 
 export const ProductsPage = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { products } = useAppSelector((state) => state.product);
   const { isOpen, itemId } = useAppSelector((state) => state.deleteModal);
@@ -24,7 +26,7 @@ export const ProductsPage = () => {
         await dispatch(deleteProductThunk(itemId)).unwrap();
         dispatch(closeDeleteModal());
       } catch (error) {
-        console.error('Ошибка при удалении продукта:', error);
+        console.error(t('Error deleting product'), error);
       }
     }
   };
@@ -46,7 +48,7 @@ export const ProductsPage = () => {
       await dispatch(createProductThunk(productData)).unwrap();
       setIsAddModalOpen(false);
     } catch (error) {
-      console.error('Ошибка при создании продукта:', error);
+      console.error(t('Error creating product'), error);
     }
   };
 
@@ -68,7 +70,7 @@ export const ProductsPage = () => {
           <div className="product-list__add-icon d-flex justify-content-center align-items-center">
             <FaPlus className="product-list__add-icon-svg" />
           </div>
-          <span className="product-list__add-text">Создать продукт</span>
+          <span className="product-list__add-text">{t('Create product')}</span>
         </button>
 
         <select
@@ -76,7 +78,7 @@ export const ProductsPage = () => {
           value={selectedType}
           onChange={(e) => setSelectedType(e.target.value)}
         >
-          <option value="all">Все типы</option>
+          <option value="all">{t('All types')}</option>
           {productTypes.map((type) => (
             <option key={type} value={type}>
               {type}
@@ -112,7 +114,7 @@ export const ProductsPage = () => {
         isOpen={isOpen}
         onConfirm={handleConfirmDelete}
         onCancel={handleCancelDelete}
-        message={productToDelete ? `Вы уверены что хотите удалить этот продукт?` : undefined}
+        message={productToDelete ? t('Are you sure you want to delete this product?') : undefined}
         product={productToDelete}
       />
 

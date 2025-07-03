@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ModalForm } from '@/shared';
 import type { Product } from '@/features';
+import { useTranslation } from 'react-i18next';
 
 interface IProps {
   isOpen: boolean;
@@ -17,6 +18,7 @@ export const AddProductToOrderModal = ({
   products,
   excludedProductIds = [],
 }: IProps) => {
+  const { t } = useTranslation();
   const [selectedProductIds, setSelectedProductIds] = useState<number[]>([]);
 
   const handleToggle = (id: number) => {
@@ -42,11 +44,11 @@ export const AddProductToOrderModal = ({
         onCancel();
       }}
       onConfirm={handleConfirm}
-      title="Добавить продукт в приход"
+      title={t('Add product to order')}
     >
       <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
         {availableProducts.length === 0 && (
-          <p className="text-muted">Нет доступных продуктов для добавления</p>
+          <p className="text-muted">{t('No available products to add')}</p>
         )}
         {availableProducts.map((product) => (
           <div key={product.id} className="form-check">

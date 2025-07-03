@@ -4,6 +4,7 @@ import { useAppSelector, useAppDispatch, CardTitle } from '@/shared';
 import { CardAvatar, CardDelete, CardIndicator, CardStatus, CardTitleWithSerial } from '@/shared';
 import { motion } from 'framer-motion';
 import { FaPlus } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
 import './ProductList.css';
 import { AddProductToOrderModal } from '@/features';
 
@@ -20,6 +21,7 @@ export const ProductList = ({ orderId, orderTitle, onClose, onRemoveProduct }: I
   const products = allProducts.filter((p) => p.order === orderId);
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const { t } = useTranslation();
 
   const handleAddProducts = (productIds: number[]) => {
     productIds.forEach((productId) => {
@@ -33,7 +35,7 @@ export const ProductList = ({ orderId, orderTitle, onClose, onRemoveProduct }: I
       <button
         className="product-list__close"
         onClick={onClose}
-        aria-label="Закрыть окно"
+        aria-label={t('Close window')}
         type="button"
       />
       <div className="product-list border rounded shadow-sm bg-white position-relative p-3">
@@ -46,11 +48,11 @@ export const ProductList = ({ orderId, orderTitle, onClose, onRemoveProduct }: I
           <div className="product-list__add-icon d-flex justify-content-center align-items-center">
             <FaPlus className="product-list__add-icon-svg" />
           </div>
-          <span className="product-list__add-text">Добавить продукты в список</span>
+          <span className="product-list__add-text">{t('Add products to list')}</span>
         </button>
 
         {products.length === 0 ? (
-          <p className="product-list__empty text-muted">Нет продуктов в этом заказе</p>
+          <p className="product-list__empty text-muted">{t('No products in this order')}</p>
         ) : (
           <ul className="product-list__items d-flex flex-column gap-2">
             {products.map((product, index) => (
