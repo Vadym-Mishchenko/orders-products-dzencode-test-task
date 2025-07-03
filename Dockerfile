@@ -1,5 +1,4 @@
-# Этап сборки
-FROM node:18-alpine AS build
+FROM node:18-alpine
 
 WORKDIR /app
 
@@ -8,13 +7,8 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build
+# Применим prisma generate и запустим фронт + бэк параллельно
+CMD ["sh", "-c", "npx prisma generate && npm run start-server & npm run dev"]
 
-# Этап продакшна
-FROM nginx:alpine
-
-COPY --from=build /app/dist /usr/share/nginx/html
-
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE 5173
+EXPOSE 5000
