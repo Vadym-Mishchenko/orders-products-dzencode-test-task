@@ -9,7 +9,7 @@
     "lint": "eslint . --ext .ts,.tsx",
     "format": "prettier --write .",
     "build-server": "tsc --project tsconfig.build.json",
-    "start-server": "node dist/server/app.js",
+    "start-server": "node dist/app.js",
     "test": "vitest"
   },
   "dependencies": {
