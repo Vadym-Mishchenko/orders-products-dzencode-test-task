@@ -136,7 +136,7 @@ https://orders-products-dzencode-test-task.onrender.com/orders
 
 Файл схемы БД (`schema.prisma`) находится в корне проекта
 
-[`orders-products-db.sql`](./prisma/migrations/20250702182320_init/migration.sql)
+[`migration.sql`](./prisma/migrations/20250702182320_init/migration.sql)
 
 Можно открыть схему и структуру БД в MySQL Workbench или аналогичных инструментах с поддержкой SQLite или через [dbdiagram.io](https://dbdiagram.io)
 
