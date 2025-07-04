@@ -12,6 +12,22 @@ export default defineConfig({
     port: 5173,
     strictPort: true,
     allowedHosts: ['orders-products-dzencode-test-task.onrender.com'],
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+      },
+    },
+  },
+  preview: {
+    host: '0.0.0.0',
+    port: 4173,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+      },
+    },
   },
   plugins: [react()],
   resolve: {
