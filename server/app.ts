@@ -5,8 +5,8 @@ import http from 'http';
 import { Server } from 'socket.io';
 
 const app = express();
-const PORT = process.env.PORT || 5000;
-// const PORT = 5000;
+// const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 const prisma = new PrismaClient();
 
 app.use(cors());
