@@ -138,6 +138,7 @@ https://orders-products-dzencode-test-task.onrender.com/orders
 
 Можно открыть схему и структуру БД в MySQL Workbench или аналогичных инструментах с поддержкой SQLite или через [dbdiagram.io](https://dbdiagram.io)
 
+Файл схемы базы данных: [`orders-products-db.sql`](./orders-products-db.sql)
 ![Схема базы данных](db-schema.PNG)
 
 ---
