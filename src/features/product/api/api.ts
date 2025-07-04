@@ -1,7 +1,7 @@
 import { adaptProductFromApi, adaptProductToApi } from '../lib';
 import { Product } from '../model';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api/products';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
 
 export const fetchProducts = async (): Promise<Product[]> => {
   const response = await fetch(`${API_BASE}/products`);

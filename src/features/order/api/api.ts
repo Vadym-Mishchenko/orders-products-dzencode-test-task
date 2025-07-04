@@ -1,7 +1,7 @@
 import { Order } from '@/entities';
 import { adaptOrderFromApi, adaptOrderToApi } from '../lib';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api/orders';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
 
 export const fetchOrders = async (): Promise<Order[]> => {
   const response = await fetch(`${API_BASE}/orders`);
@@ -21,6 +21,7 @@ export const createOrder = async (order: Omit<Order, 'id' | 'products'>): Promis
   });
 
   if (!response.ok) throw new Error('Failed to create order');
+
   const data = await response.json();
   return adaptOrderFromApi(data);
 };
@@ -31,5 +32,6 @@ export const deleteOrder = async (id: number): Promise<{ message: string }> => {
   });
 
   if (!response.ok) throw new Error('Failed to delete order');
+
   return response.json();
 };
