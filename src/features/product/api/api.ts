@@ -1,10 +1,10 @@
 import { adaptProductFromApi, adaptProductToApi } from '../lib';
 import { Product } from '../model';
 
-const PRODUCTS_API_URL = '/api/products';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api/products';
 
 export const fetchProducts = async (): Promise<Product[]> => {
-  const response = await fetch(PRODUCTS_API_URL);
+  const response = await fetch(API_BASE);
   if (!response.ok) throw new Error('Failed to fetch products');
 
   const data = await response.json();
@@ -14,7 +14,7 @@ export const fetchProducts = async (): Promise<Product[]> => {
 export const createProduct = async (product: Omit<Product, 'id'>): Promise<Product> => {
   const payload = adaptProductToApi(product);
 
-  const response = await fetch(PRODUCTS_API_URL, {
+  const response = await fetch(API_BASE, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
@@ -29,7 +29,7 @@ export const createProduct = async (product: Omit<Product, 'id'>): Promise<Produ
 export const updateProduct = async (id: number, product: Partial<Product>): Promise<Product> => {
   const payload = adaptProductToApi(product as Product);
 
-  const response = await fetch(`${PRODUCTS_API_URL}/${id}`, {
+  const response = await fetch(`${API_BASE}/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
@@ -42,7 +42,7 @@ export const updateProduct = async (id: number, product: Partial<Product>): Prom
 };
 
 export const deleteProduct = async (id: number) => {
-  const response = await fetch(`${PRODUCTS_API_URL}/${id}`, {
+  const response = await fetch(`${API_BASE}/${id}`, {
     method: 'DELETE',
   });
 

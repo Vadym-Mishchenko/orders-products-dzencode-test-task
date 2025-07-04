@@ -1,10 +1,10 @@
 import { Order } from '@/entities';
 import { adaptOrderFromApi, adaptOrderToApi } from '../lib';
 
-const API_URL = '/api/orders';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api/orders';
 
 export const fetchOrders = async (): Promise<Order[]> => {
-  const response = await fetch(API_URL);
+  const response = await fetch(API_BASE);
   if (!response.ok) throw new Error('Failed to fetch orders');
 
   const data = await response.json();
@@ -14,7 +14,7 @@ export const fetchOrders = async (): Promise<Order[]> => {
 export const createOrder = async (order: Omit<Order, 'id' | 'products'>): Promise<Order> => {
   const payload = adaptOrderToApi(order);
 
-  const response = await fetch(API_URL, {
+  const response = await fetch(API_BASE, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
@@ -26,7 +26,7 @@ export const createOrder = async (order: Omit<Order, 'id' | 'products'>): Promis
 };
 
 export const deleteOrder = async (id: number): Promise<{ message: string }> => {
-  const response = await fetch(`${API_URL}/${id}`, {
+  const response = await fetch(`${API_BASE}/${id}`, {
     method: 'DELETE',
   });
 
