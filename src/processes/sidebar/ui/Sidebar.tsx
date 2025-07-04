@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useNavItems } from '../config';
 import { FaCog, FaUserCircle } from 'react-icons/fa';
@@ -11,17 +11,19 @@ export const Sidebar = () => {
   const { i18n } = useTranslation();
   const navItems = useNavItems();
 
+  const [lang, setLang] = useState(() => {
+    return localStorage.getItem(STORAGE_KEY) || i18n.language || 'en';
+  });
+
   useEffect(() => {
-    const savedLang = localStorage.getItem(STORAGE_KEY);
-    if (savedLang && savedLang !== i18n.language) {
-      i18n.changeLanguage(savedLang);
+    if (lang !== i18n.language) {
+      i18n.changeLanguage(lang);
     }
-  }, [i18n]);
+    localStorage.setItem(STORAGE_KEY, lang);
+  }, [lang, i18n]);
 
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const lang = e.target.value;
-    i18n.changeLanguage(lang);
-    localStorage.setItem(STORAGE_KEY, lang);
+    setLang(e.target.value);
   };
 
   return (
@@ -45,7 +47,7 @@ export const Sidebar = () => {
           <select
             className="form-select form-select-sm"
             onChange={handleLanguageChange}
-            value={i18n.language}
+            value={lang}
           >
             <option value="en">English</option>
             <option value="uk">Українська</option>
