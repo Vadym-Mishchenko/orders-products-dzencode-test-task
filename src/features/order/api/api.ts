@@ -1,7 +1,7 @@
 import { Order } from '@/entities';
 import { adaptOrderFromApi, adaptOrderToApi } from '../lib';
 
-const API_URL = 'http://localhost:5000/api/orders';
+const API_URL = '/api/orders';
 
 export const fetchOrders = async (): Promise<Order[]> => {
   const response = await fetch(API_URL);

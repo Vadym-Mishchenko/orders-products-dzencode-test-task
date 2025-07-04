@@ -1,7 +1,7 @@
 import { adaptProductFromApi, adaptProductToApi } from '../lib';
 import { Product } from '../model';
 
-const PRODUCTS_API_URL = 'http://localhost:5000/api/products';
+const PRODUCTS_API_URL = '/api/products';
 
 export const fetchProducts = async (): Promise<Product[]> => {
   const response = await fetch(PRODUCTS_API_URL);
